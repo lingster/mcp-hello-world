@@ -1,0 +1,13 @@
+{
+  "servers": {
+    "hello-world": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "server.py"
+      ]
+    }
+  }
+}
