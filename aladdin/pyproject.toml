@@ -1,0 +1,20 @@
+[project]
+name = "aladdin-mcp-server"
+version = "0.1.0"
+description = "MCP server exposing BlackRock Aladdin SDK capabilities to AI assistants"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "aladdinsdk",
+    "mcp[cli]>=1.26.0",
+    "loguru>=0.7.3",
+    "uvicorn>=0.30.0",
+    "pydantic>=2.0.0",
+]
+
+[project.scripts]
+aladdin-mcp = "mcp_server.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.backends"
