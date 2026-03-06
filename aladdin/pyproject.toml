@@ -14,6 +14,7 @@ dependencies = [
 
 [project.scripts]
 aladdin-mcp = "mcp_server.main:main"
+aladdin-setup-oauth = "setup_oauth:main"
 
 [build-system]
 requires = ["hatchling"]
