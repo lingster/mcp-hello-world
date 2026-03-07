@@ -1,20 +1,46 @@
 [project]
 name = "aladdin-mcp-server"
 version = "0.1.0"
-description = "MCP server exposing BlackRock Aladdin SDK capabilities to AI assistants"
-readme = "README.md"
+description = "MCP server exposing BlackRock Aladdin API capabilities to AI assistants"
 requires-python = ">=3.11"
 dependencies = [
-    "aladdinsdk",
     "mcp[cli]>=1.26.0",
     "loguru>=0.7.3",
-    "uvicorn>=0.30.0",
-    "pydantic>=2.0.0",
+    "httpx>=0.27.0",
+]
+
+[project.optional-dependencies]
+adc = [
+    "snowflake-connector-python>=3.6.0",
+    "pandas>=2.0.0",
+]
+storage = [
+    "boto3>=1.35.0",
+]
+plugins = [
+    "asdk_plugin_accounting",
+    "asdk_plugin_analytics",
+    "asdk_plugin_clients",
+    "asdk_plugin_compliance",
+    "asdk_plugin_data",
+    "asdk_plugin_investment_operations",
+    "asdk_plugin_investment_research",
+    "asdk_plugin_platform",
+    "asdk_plugin_portfolio",
+    "asdk_plugin_portfolio_management",
+    "asdk_plugin_trading",
+]
+all = [
+    "aladdin-mcp-server[adc,storage,plugins]",
 ]
 
 [project.scripts]
 aladdin-mcp = "mcp_server.main:main"
+aladdin-setup-oauth = "setup_oauth:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["mcp_server"]
 
 [build-system]
 requires = ["hatchling"]
-build-backend = "hatchling.backends"
+build-backend = "hatchling.build"

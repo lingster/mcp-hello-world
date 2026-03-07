@@ -3,6 +3,40 @@ import json
 from loguru import logger
 from mcp.server.fastmcp import FastMCP
 
+from mcp_server.aladdin_client import validate_sql_identifier
+from mcp_server.config import server_config
+from mcp_server.tools.api_tools import _get_client
+
+
+def _get_snowflake_connection():  # type: ignore[no-untyped-def]
+    """Create a Snowflake connection using config and OAuth token."""
+    import snowflake.connector
+
+    adc = server_config.adc
+    oauth = server_config.oauth
+
+    connect_params: dict = {
+        "account": adc.account,
+        "role": adc.role,
+        "warehouse": adc.warehouse,
+        "database": adc.database,
+        "schema": adc.schema_name,
+        "session_parameters": {"QUERY_TAG": "QueryViaSDK-AladdinMCP"},
+    }
+
+    if adc.authenticator == "oauth":
+        token = adc.oauth_access_token
+        if not token:
+            # Reuse the shared client's token manager to benefit from token caching
+            token = _get_client()._token_manager.get_access_token()
+        connect_params["authenticator"] = "oauth"
+        connect_params["token"] = token
+    else:
+        connect_params["user"] = oauth.username
+        connect_params["password"] = oauth.password
+
+    return snowflake.connector.connect(**connect_params)
+
 
 def register_adc_tools(mcp: FastMCP) -> None:
     """Register Aladdin Data Cloud (ADC) tools with the MCP server."""
@@ -11,26 +45,29 @@ def register_adc_tools(mcp: FastMCP) -> None:
     def query_adc(sql: str) -> str:
         """Execute a SQL query against Aladdin Data Cloud (Snowflake).
 
-        Requires ADC connection to be configured via environment variables or
-        the AladdinSDK settings file (account, role, warehouse, database, schema).
+        Requires ADC connection to be configured via environment variables
+        (ASDK_ADC__CONN__ACCOUNT, ASDK_ADC__CONN__ROLE, etc.).
 
         Args:
             sql: SQL query to execute (e.g. 'SELECT * FROM my_table LIMIT 10')
 
         Returns:
-            JSON string of query results (records orientation) or error message.
+            JSON string of query results or error message.
         """
-        from aladdinsdk.adc.client import ADCClient
+        import pandas as pd
 
         try:
-            client = ADCClient()
-            df = client.query_sql(sql)
-            result = df.to_dict(orient="records")
-            return json.dumps({
-                "row_count": len(result),
-                "columns": list(df.columns),
-                "data": result,
-            }, indent=2, default=str)
+            conn = _get_snowflake_connection()
+            try:
+                df = pd.read_sql(sql, conn)
+                result = df.to_dict(orient="records")
+                return json.dumps({
+                    "row_count": len(result),
+                    "columns": list(df.columns),
+                    "data": result,
+                }, indent=2, default=str)
+            finally:
+                conn.close()
         except Exception as e:
             logger.error(f"ADC query failed: {e}")
             return json.dumps({"error": str(e)})
@@ -46,17 +83,21 @@ def register_adc_tools(mcp: FastMCP) -> None:
         Returns:
             JSON list of table names in the specified schema.
         """
-        from aladdinsdk.adc.client import ADCClient
+        import pandas as pd
 
         try:
-            client = ADCClient(database=database, schema=schema)
-            sql = f"SHOW TABLES IN {database}.{schema}"
-            df = client.query_sql(sql)
-            return json.dumps({
-                "database": database,
-                "schema": schema,
-                "tables": df.to_dict(orient="records"),
-            }, indent=2, default=str)
+            db = validate_sql_identifier(database, "database")
+            sch = validate_sql_identifier(schema, "schema")
+            conn = _get_snowflake_connection()
+            try:
+                df = pd.read_sql(f"SHOW TABLES IN {db}.{sch}", conn)
+                return json.dumps({
+                    "database": database,
+                    "schema": schema,
+                    "tables": df.to_dict(orient="records"),
+                }, indent=2, default=str)
+            finally:
+                conn.close()
         except Exception as e:
             logger.error(f"Failed to list ADC tables: {e}")
             return json.dumps({"error": str(e)})
@@ -73,18 +114,85 @@ def register_adc_tools(mcp: FastMCP) -> None:
         Returns:
             JSON description of table columns and their types.
         """
-        from aladdinsdk.adc.client import ADCClient
+        import pandas as pd
 
         try:
-            client = ADCClient(database=database, schema=schema)
-            sql = f"DESCRIBE TABLE {database}.{schema}.{table}"
-            df = client.query_sql(sql)
-            return json.dumps({
-                "database": database,
-                "schema": schema,
-                "table": table,
-                "columns": df.to_dict(orient="records"),
-            }, indent=2, default=str)
+            db = validate_sql_identifier(database, "database")
+            sch = validate_sql_identifier(schema, "schema")
+            tbl = validate_sql_identifier(table, "table")
+            conn = _get_snowflake_connection()
+            try:
+                df = pd.read_sql(f"DESCRIBE TABLE {db}.{sch}.{tbl}", conn)
+                return json.dumps({
+                    "database": database,
+                    "schema": schema,
+                    "table": table,
+                    "columns": df.to_dict(orient="records"),
+                }, indent=2, default=str)
+            finally:
+                conn.close()
         except Exception as e:
             logger.error(f"Failed to describe table: {e}")
+            return json.dumps({"error": str(e)})
+
+    @mcp.tool()
+    def write_adc(
+        data: list[dict],
+        table_name: str,
+        database: str | None = None,
+        schema: str | None = None,
+        overwrite: bool = False,
+        auto_create_table: bool = True,
+    ) -> str:
+        """Write data to an Aladdin Data Cloud (Snowflake) table.
+
+        Writes a list of row dicts to Snowflake using pandas write_pandas.
+
+        Args:
+            data: List of row dicts to write (e.g. [{"col1": "val1", "col2": 2}, ...])
+            table_name: Target table name
+            database: Snowflake database (uses default if not provided)
+            schema: Snowflake schema (uses default if not provided)
+            overwrite: If true, overwrite existing data in the table
+            auto_create_table: If true, auto-create the table if it doesn't exist
+
+        Returns:
+            JSON with write status and row count.
+        """
+        import pandas as pd
+        from snowflake.connector.pandas_tools import write_pandas
+
+        try:
+            tbl = validate_sql_identifier(table_name, "table_name")
+            if database:
+                validate_sql_identifier(database, "database")
+            if schema:
+                validate_sql_identifier(schema, "schema")
+
+            df = pd.DataFrame(data)
+            if df.empty:
+                return json.dumps({"error": "No data provided"})
+
+            conn = _get_snowflake_connection()
+            try:
+                success, num_chunks, num_rows, _ = write_pandas(
+                    conn=conn,
+                    df=df,
+                    table_name=tbl,
+                    database=database,
+                    schema=schema,
+                    overwrite=overwrite,
+                    auto_create_table=auto_create_table,
+                    quote_identifiers=False,
+                )
+                return json.dumps({
+                    "status": "success" if success else "failed",
+                    "table_name": table_name,
+                    "rows_written": num_rows,
+                    "chunks": num_chunks,
+                }, indent=2)
+            finally:
+                conn.close()
+        except Exception as e:
+            logger.error(f"Failed to write to ADC table {table_name}: {e}")
             return json.dumps({"error": str(e)})
