@@ -1,6 +1,5 @@
 import sys
 
-import uvicorn
 from loguru import logger
 from mcp.server.fastmcp import FastMCP
 

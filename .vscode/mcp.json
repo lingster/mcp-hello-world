@@ -8,6 +8,19 @@
         "python",
         "server.py"
       ]
+    },
+    "aladdin-mcp": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "aladdin",
+        "aladdin-mcp"
+      ],
+      "env": {
+        "MCP_TRANSPORT": "stdio"
+      }
     }
   }
 }

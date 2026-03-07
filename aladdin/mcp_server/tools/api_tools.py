@@ -3,7 +3,20 @@ import json
 from loguru import logger
 from mcp.server.fastmcp import FastMCP
 
+from mcp_server.aladdin_client import AladdinRestClient
 from mcp_server.config import server_config
+
+_client: AladdinRestClient | None = None
+
+
+def _get_client() -> AladdinRestClient:
+    global _client
+    if _client is None:
+        _client = AladdinRestClient(
+            default_web_server=server_config.default_web_server,
+            oauth_config=server_config.oauth,
+        )
+    return _client
 
 
 def register_api_tools(mcp: FastMCP) -> None:
@@ -11,105 +24,82 @@ def register_api_tools(mcp: FastMCP) -> None:
 
     @mcp.tool()
     def list_available_apis() -> str:
-        """List all available Aladdin APIs registered in the SDK.
+        """List all available Aladdin APIs from bundled swagger specifications.
 
-        Returns a JSON list of API names that can be used with the other API tools.
+        Returns a JSON list of APIs with their name, base_path, version and description.
+        Use the base_path value when calling other API tools.
         """
-        from aladdinsdk.api.registry import get_api_names
-
         try:
-            api_names = get_api_names()
-            return json.dumps({"apis": api_names}, indent=2)
+            apis = _get_client().list_apis_from_swagger()
+            return json.dumps({"apis": apis}, indent=2)
         except Exception as e:
             logger.error(f"Failed to list APIs: {e}")
             return json.dumps({"error": str(e)})
 
     @mcp.tool()
-    def list_api_endpoints(api_name: str) -> str:
-        """List all available endpoint methods for a given Aladdin API.
+    def list_api_endpoints(base_path: str) -> str:
+        """List all available endpoints for an Aladdin API.
 
         Args:
-            api_name: Name of the API (e.g. 'TrainJourneyAPI', 'TokenAPI')
+            base_path: API base path from list_available_apis (e.g. '/api/reference-architecture/demo/train-journey/v1/')
         """
-        from aladdinsdk.api.client import AladdinAPI
-
         try:
-            api = AladdinAPI(api_name, default_web_server=server_config.default_web_server)
-            methods = api.get_api_endpoint_methods()
-            paths = api.get_api_endpoint_path_tuples()
+            endpoints = _get_client().list_endpoints_from_swagger(base_path)
             return json.dumps({
-                "api_name": api_name,
-                "endpoint_methods": methods,
-                "endpoint_paths": [{"path": p[0], "method": p[1]} for p in paths],
+                "base_path": base_path,
+                "endpoints": endpoints,
             }, indent=2)
         except Exception as e:
-            logger.error(f"Failed to list endpoints for {api_name}: {e}")
+            logger.error(f"Failed to list endpoints for {base_path}: {e}")
             return json.dumps({"error": str(e)})
 
     @mcp.tool()
-    def get_api_endpoint_signature(api_name: str, endpoint_method: str) -> str:
-        """Get the method signature for a specific API endpoint, showing required and optional parameters.
+    def get_api_endpoint_details(base_path: str, endpoint_path: str, http_method: str = "get") -> str:
+        """Get parameter details for a specific API endpoint from its swagger specification.
 
         Args:
-            api_name: Name of the API (e.g. 'TrainJourneyAPI')
-            endpoint_method: Name of the endpoint method (e.g. 'filter_train_journeys')
+            base_path: API base path (e.g. '/api/reference-architecture/demo/train-journey/v1/')
+            endpoint_path: Endpoint path (e.g. '/trainJourneys:filter')
+            http_method: HTTP method (get, post, put, delete, patch)
         """
-        from aladdinsdk.api.client import AladdinAPI
-
         try:
-            api = AladdinAPI(api_name, default_web_server=server_config.default_web_server)
-            sig = api.get_api_endpoint_signature(endpoint_method)
-            return json.dumps({
-                "api_name": api_name,
-                "endpoint": endpoint_method,
-                "signature": str(sig),
-            }, indent=2)
+            details = _get_client().get_endpoint_details_from_swagger(base_path, endpoint_path, http_method)
+            if details is None:
+                return json.dumps({"error": f"Endpoint {http_method.upper()} {endpoint_path} not found"})
+            return json.dumps(details, indent=2)
         except Exception as e:
-            logger.error(f"Failed to get signature for {api_name}.{endpoint_method}: {e}")
+            logger.error(f"Failed to get endpoint details: {e}")
             return json.dumps({"error": str(e)})
 
     @mcp.tool()
     def call_aladdin_api(
-        api_name: str,
-        endpoint: str,
+        base_path: str,
+        endpoint_path: str,
         http_method: str = "get",
         request_body: dict | None = None,
         params: dict | None = None,
     ) -> str:
-        """Call an Aladdin Graph API endpoint.
+        """Call an Aladdin Graph API endpoint directly via REST.
 
-        Use list_available_apis() to discover APIs, list_api_endpoints() to see
-        available endpoints, and get_api_endpoint_signature() to see parameters.
+        Use list_available_apis() to discover APIs and list_api_endpoints() to see
+        available endpoints.
 
         Args:
-            api_name: Name of the API (e.g. 'TrainJourneyAPI')
-            endpoint: Endpoint method name (e.g. 'filter_train_journeys') or swagger path (e.g. '/train-journeys:filter')
-            http_method: HTTP method - get, post, put, delete, patch. Only needed when using swagger path.
+            base_path: API base path (e.g. '/api/reference-architecture/demo/train-journey/v1/')
+            endpoint_path: Swagger endpoint path (e.g. '/trainJourneys:filter')
+            http_method: HTTP method - get, post, put, delete, patch
             request_body: Request body dict for POST/PUT/PATCH calls
-            params: Additional keyword parameters for the API call
+            params: Query parameters dict
         """
-        from aladdinsdk.api.client import AladdinAPI
-
-        if params is None:
-            params = {}
-
         try:
-            api = AladdinAPI(api_name, default_web_server=server_config.default_web_server)
-
-            # Determine how to call the endpoint
-            if endpoint.startswith("/"):
-                api_endpoint = (endpoint, http_method)
-            else:
-                api_endpoint = endpoint
-
-            result = api.call_api(
-                api_endpoint,
+            result = _get_client().call_api(
+                base_path=base_path,
+                endpoint_path=endpoint_path,
+                http_method=http_method,
                 request_body=request_body,
-                _deserialize_to_object=False,
-                **params,
+                params=params,
             )
-
             return json.dumps(result, indent=2, default=str)
         except Exception as e:
-            logger.error(f"API call failed for {api_name}/{endpoint}: {e}")
+            logger.error(f"API call failed for {http_method.upper()} {base_path}{endpoint_path}: {e}")
             return json.dumps({"error": str(e)})
