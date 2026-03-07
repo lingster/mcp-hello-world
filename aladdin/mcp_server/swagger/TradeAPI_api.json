@@ -1,0 +1,3395 @@
+{
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "schemes": [
+        "https"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "Post, cancel, filter and retrieve trade(s) based on request parameters.",
+        "title": "Trade",
+        "version": "2.0.0",
+        "x-aladdin-api-id": "agraph.trading.trade_processing.trade.TradeAPI",
+        "x-aladdin-api-stability": "alpha",
+        "x-aladdin-spec-id": "agraph.trading.trade_processing.trade.v2.TradeAPI"
+    },
+    "basePath": "/api/trading/trade-processing/trade/v2/",
+    "paths": {
+        "/longrunningoperations/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2AccessCode": [
+                            "trading.trade_processing.trade.v2.Trade:read"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2ClientCredentials": [
+                            "trading.trade_processing.trade.v2.Trade:read"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "ClientKeyHeader": []
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "basicAuth": []
+                    }
+                ],
+                "description": "Poll for the result of a long-running operation.\n(-- api-linter: core::0151::operation-info=disabled aip.dev/not-precedent: Multiple response types can be returned dependent on the LRO API operation. --)",
+                "summary": "Get the long-running operation results",
+                "operationId": "TradeAPI_GetLongrunningOperation",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "UUID",
+                        "description": "A unique identifier for this request.",
+                        "name": "VND.com.blackrock.Request-ID",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+                        "name": "VND.com.blackrock.Origin-Timestamp",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Id of the LongrunningOperation",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "schema": {
+                            "$ref": "#/definitions/v1LongrunningOperation"
+                        },
+                        "x-aladdin-lro": {}
+                    },
+                    "400": {
+                        "description": "Aladdin® will not process the request due to an apparent client error.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Aladdin® will not process the request as the necessary credentials were not provided or were invalid.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Aladdin® understood the request but is refusing to authorize it.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aladdin® did not find the resource requested or is unwilling to disclose if it exists. Could indicate a defect in the client program or data which is no longer accessible.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    }
+                },
+                "x-access-type": "READ",
+                "x-quota-limit": 1000
+            }
+        },
+        "/trades:batchCancel": {
+            "post": {
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2AccessCode": [
+                            "trading.trade_processing.trade.v2.Trade:write"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2ClientCredentials": [
+                            "trading.trade_processing.trade.v2.Trade:write"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "ClientKeyHeader": []
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "basicAuth": []
+                    }
+                ],
+                "description": "Cancels all trades provided in the request. Returns a long-running operation to allow the retrieval of trade cancel response.\n(-- api-linter: aladdin::9050::result-message-fields=disabled\naip.dev/not-precedent: We need to do this because api result is LRO Id, and it refers to LRO API --)",
+                "summary": "Cancel trades",
+                "operationId": "TradeAPI_BatchCancelTrades",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "UUID",
+                        "description": "A unique identifier for this request.",
+                        "name": "VND.com.blackrock.Request-ID",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+                        "name": "VND.com.blackrock.Origin-Timestamp",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v2BatchCancelTradesRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "schema": {
+                            "$ref": "#/definitions/v1LongrunningOperation"
+                        },
+                        "x-aladdin-lro": {
+                            "meta-data-type": {
+                                "$ref": "#/definitions/v2BatchCancelTradesMetaData"
+                            },
+                            "response-type": {
+                                "$ref": "#/definitions/v2BatchCancelTradesResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Aladdin® will not process the request due to an apparent client error.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Aladdin® will not process the request as the necessary credentials were not provided or were invalid.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Aladdin® understood the request but is refusing to authorize it.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aladdin® did not find the resource requested or is unwilling to disclose if it exists. Could indicate a defect in the client program or data which is no longer accessible.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    }
+                },
+                "x-access-type": "WRITE",
+                "x-quota-limit": 250
+            }
+        },
+        "/trades:batchPost": {
+            "post": {
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2AccessCode": [
+                            "trading.trade_processing.trade.v2.Trade:write"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2ClientCredentials": [
+                            "trading.trade_processing.trade.v2.Trade:write"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "ClientKeyHeader": []
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "basicAuth": []
+                    }
+                ],
+                "description": "Takes all trades provided in the request, updates those that exist, and create those that don't. Returns a long-running operation to allow the retrieval of trade posting response.\n(-- api-linter: aladdin::9050::result-message-fields=disabled\n aip.dev/not-precedent: We need to do this because api result is LRO Id, and it refers to LRO API --)",
+                "summary": "Post or update trades",
+                "operationId": "TradeAPI_BatchPostTrades",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "UUID",
+                        "description": "A unique identifier for this request.",
+                        "name": "VND.com.blackrock.Request-ID",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+                        "name": "VND.com.blackrock.Origin-Timestamp",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v2BatchPostTradesRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "schema": {
+                            "$ref": "#/definitions/v1LongrunningOperation"
+                        },
+                        "x-aladdin-lro": {
+                            "meta-data-type": {
+                                "$ref": "#/definitions/v2BatchPostTradesMetaData"
+                            },
+                            "response-type": {
+                                "$ref": "#/definitions/v2BatchPostTradesResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Aladdin® will not process the request due to an apparent client error.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Aladdin® will not process the request as the necessary credentials were not provided or were invalid.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Aladdin® understood the request but is refusing to authorize it.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aladdin® did not find the resource requested or is unwilling to disclose if it exists. Could indicate a defect in the client program or data which is no longer accessible.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    }
+                },
+                "x-access-type": "WRITE",
+                "x-quota-limit": 250
+            }
+        },
+        "/trades:cancel": {
+            "post": {
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2AccessCode": [
+                            "trading.trade_processing.trade.v2.Trade:write"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2ClientCredentials": [
+                            "trading.trade_processing.trade.v2.Trade:write"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "ClientKeyHeader": []
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "basicAuth": []
+                    }
+                ],
+                "description": "Cancels the trade provided in the request. Returns the trade cancel response.",
+                "summary": "Cancel trade",
+                "operationId": "TradeAPI_CancelTrade",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "UUID",
+                        "description": "A unique identifier for this request.",
+                        "name": "VND.com.blackrock.Request-ID",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+                        "name": "VND.com.blackrock.Origin-Timestamp",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v2CancelTradeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "schema": {
+                            "$ref": "#/definitions/v2CancelTradeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Aladdin® will not process the request due to an apparent client error.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Aladdin® will not process the request as the necessary credentials were not provided or were invalid.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Aladdin® understood the request but is refusing to authorize it.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aladdin® did not find the resource requested or is unwilling to disclose if it exists. Could indicate a defect in the client program or data which is no longer accessible.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    }
+                },
+                "x-access-type": "WRITE",
+                "x-quota-limit": 250
+            }
+        },
+        "/trades:filter": {
+            "post": {
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2AccessCode": [
+                            "trading.trade_processing.trade.v2.Trade:read"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2ClientCredentials": [
+                            "trading.trade_processing.trade.v2.Trade:read"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "ClientKeyHeader": []
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "basicAuth": []
+                    }
+                ],
+                "description": "The filterTrade API endpoint allows users to retrieve trade based on specific filtering criteria.",
+                "summary": "Filter trade by criteria",
+                "operationId": "TradeAPI_FilterTrades",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "UUID",
+                        "description": "A unique identifier for this request.",
+                        "name": "VND.com.blackrock.Request-ID",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+                        "name": "VND.com.blackrock.Origin-Timestamp",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v2FilterTradesRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "schema": {
+                            "$ref": "#/definitions/v2FilterTradesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Aladdin® will not process the request due to an apparent client error.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Aladdin® will not process the request as the necessary credentials were not provided or were invalid.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Aladdin® understood the request but is refusing to authorize it.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aladdin® did not find the resource requested or is unwilling to disclose if it exists. Could indicate a defect in the client program or data which is no longer accessible.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    }
+                },
+                "x-access-type": "READ",
+                "x-quota-limit": 1000
+            }
+        },
+        "/trades:post": {
+            "post": {
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2AccessCode": [
+                            "trading.trade_processing.trade.v2.Trade:write"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2ClientCredentials": [
+                            "trading.trade_processing.trade.v2.Trade:write"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "ClientKeyHeader": []
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "basicAuth": []
+                    }
+                ],
+                "description": "Takes the trade provided in the request, updates it if it exists, and creates it if it doesn't. Returns the trade post response.\n(-- api-linter: core::0133::synonyms=disabled\n    aip.dev/not-precedent: post is used because it will be used to update trades in addition to creating them--)",
+                "summary": "Post or update trade",
+                "operationId": "TradeAPI_PostTrade",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "UUID",
+                        "description": "A unique identifier for this request.",
+                        "name": "VND.com.blackrock.Request-ID",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+                        "name": "VND.com.blackrock.Origin-Timestamp",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v2PostTradeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "schema": {
+                            "$ref": "#/definitions/v2PostTradeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Aladdin® will not process the request due to an apparent client error.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Aladdin® will not process the request as the necessary credentials were not provided or were invalid.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Aladdin® understood the request but is refusing to authorize it.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aladdin® did not find the resource requested or is unwilling to disclose if it exists. Could indicate a defect in the client program or data which is no longer accessible.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    }
+                },
+                "x-access-type": "WRITE",
+                "x-quota-limit": 250
+            }
+        },
+        "/trades:retrieve": {
+            "post": {
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2AccessCode": [
+                            "trading.trade_processing.trade.v2.Trade:read"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "OAuth2ClientCredentials": [
+                            "trading.trade_processing.trade.v2.Trade:read"
+                        ]
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "ClientKeyHeader": []
+                    },
+                    {
+                        "APIKeyHeader": [],
+                        "basicAuth": []
+                    }
+                ],
+                "description": "The retrieveTrades API endpoint provides users with list of trades based on specific trade keys criteria.",
+                "summary": "Retrieve trade by key criteria",
+                "operationId": "TradeAPI_RetrieveTrades",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "UUID",
+                        "description": "A unique identifier for this request.",
+                        "name": "VND.com.blackrock.Request-ID",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp assigned to this request at origin, in \"HTTP-date\" format as defined by RFC 7231.",
+                        "name": "VND.com.blackrock.Origin-Timestamp",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v2RetrieveTradesRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "schema": {
+                            "$ref": "#/definitions/v2RetrieveTradesResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Aladdin® will not process the request due to an apparent client error.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Aladdin® will not process the request as the necessary credentials were not provided or were invalid.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Aladdin® understood the request but is refusing to authorize it.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aladdin® did not find the resource requested or is unwilling to disclose if it exists. Could indicate a defect in the client program or data which is no longer accessible.",
+                        "schema": {
+                            "description": "Defines an error that occurred.",
+                            "type": "object",
+                            "required": [
+                                "code",
+                                "message"
+                            ],
+                            "properties": {
+                                "code": {
+                                    "description": "A short mnemonic reference code for the error.",
+                                    "type": "string",
+                                    "maxLength": 40
+                                },
+                                "message": {
+                                    "description": "A human readable description of the error.",
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "VND.com.blackrock.Request-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "The unique identifier assigned by the client to the request that originated this response."
+                            },
+                            "VND.com.blackrock.Response-ID": {
+                                "type": "string",
+                                "format": "UUID",
+                                "description": "A Unique Identifier for this response."
+                            },
+                            "VND.com.blackrock.Response-Timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Timestamp assigned to this response, in \"HTTP-date\" format as defined by RFC 7231."
+                            }
+                        }
+                    }
+                },
+                "x-access-type": "READ",
+                "x-quota-limit": 1000
+            }
+        }
+    },
+    "definitions": {
+        "Any": {
+            "description": "`Any` contains an arbitrary serialized message along with a\nURL that describes the type of the serialized message",
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "description": "A URL/resource name that uniquely identifies the type of the serialized message.",
+                    "type": "string"
+                }
+            }
+        },
+        "AssetCriterionClassification": {
+            "description": "It represents the classification of an asset. At least security group must be passed to fetch asset(s).",
+            "type": "object",
+            "properties": {
+                "securityGroup": {
+                    "description": "Security group.",
+                    "type": "string"
+                },
+                "securityType": {
+                    "description": "Security type.",
+                    "type": "string"
+                }
+            }
+        },
+        "DateTimeCriterionModifyTimeRange": {
+            "description": "It represents modify time range.",
+            "type": "object",
+            "properties": {
+                "startTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "title": "Start time. Expected: UTC time\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because Timestamp is the best suit data type for start time --)"
+                },
+                "endTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "title": "End time. Expected: UTC time\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because Timestamp is the best suit data type for end time --)"
+                }
+            }
+        },
+        "TradeCommentCommentType": {
+            "description": "- COMMENT_TYPE_UNSPECIFIED: Unspecified\n - COMMENT_TYPE_GENERAL: General\n - COMMENT_TYPE_SPECIAL: Special\n - COMMENT_TYPE_BANK: Bank\n - COMMENT_TYPE_INTERNAL: Internal",
+            "type": "string",
+            "title": "Comment Type",
+            "default": "COMMENT_TYPE_UNSPECIFIED",
+            "enum": [
+                "COMMENT_TYPE_UNSPECIFIED",
+                "COMMENT_TYPE_GENERAL",
+                "COMMENT_TYPE_SPECIAL",
+                "COMMENT_TYPE_BANK",
+                "COMMENT_TYPE_INTERNAL"
+            ]
+        },
+        "TradeFXLegsFXLeg": {
+            "type": "object",
+            "title": "FX Leg details",
+            "properties": {
+                "currencyCode": {
+                    "type": "string",
+                    "title": "Price Currency"
+                },
+                "settlementInstruction": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Settlement instruction"
+                }
+            }
+        },
+        "TradeQuoteQuoteStatus": {
+            "description": "- QUOTE_STATUS_UNSPECIFIED: Unspecified\n - QUOTE_STATUS_CANCELLED: Cancelled\n - QUOTE_STATUS_CLIENT_PASSED: Client passed\n - QUOTE_STATUS_COVERED: Covered\n - QUOTE_STATUS_DID_NOT_TRADE: DNT\n - QUOTE_STATUS_ERROR: Error Aladdin\n - QUOTE_STATUS_EXPIRED: Expired\n - QUOTE_STATUS_MISSED: Missed\n - QUOTE_STATUS_PASSED: Passed\n - QUOTE_STATUS_TIED: Tied\n - QUOTE_STATUS_TIMED_OUT: Time out\n - QUOTE_STATUS_TRADED: Traded\n - QUOTE_STATUS_REJECTED: Rejected\n - QUOTE_STATUS_TIED_COVER: Tied cover\n - QUOTE_STATUS_DONE_AWAY: Done away\n - QUOTE_STATUS_NOT_RECEIVED: Not Received\n - QUOTE_STATUS_ACTIVE: Active",
+            "type": "string",
+            "title": "Trade Quote Status\n(-- api-linter: core::0216::synonyms=disabled\n aip.dev/not-precedent: We need to do this because QuoteStatus is most suitable name --)",
+            "default": "QUOTE_STATUS_UNSPECIFIED",
+            "enum": [
+                "QUOTE_STATUS_UNSPECIFIED",
+                "QUOTE_STATUS_CANCELLED",
+                "QUOTE_STATUS_CLIENT_PASSED",
+                "QUOTE_STATUS_COVERED",
+                "QUOTE_STATUS_DID_NOT_TRADE",
+                "QUOTE_STATUS_ERROR",
+                "QUOTE_STATUS_EXPIRED",
+                "QUOTE_STATUS_MISSED",
+                "QUOTE_STATUS_PASSED",
+                "QUOTE_STATUS_TIED",
+                "QUOTE_STATUS_TIMED_OUT",
+                "QUOTE_STATUS_TRADED",
+                "QUOTE_STATUS_REJECTED",
+                "QUOTE_STATUS_TIED_COVER",
+                "QUOTE_STATUS_DONE_AWAY",
+                "QUOTE_STATUS_NOT_RECEIVED",
+                "QUOTE_STATUS_ACTIVE"
+            ]
+        },
+        "assetAssetReference": {
+            "type": "object",
+            "title": "Reference to an asset. It is a one of asset_id",
+            "properties": {
+                "assetId": {
+                    "type": "string",
+                    "title": "asset id"
+                },
+                "cusip": {
+                    "type": "string",
+                    "title": "9-character alphanumeric code used to identify North American financial securities (S\u0026P CUSIP)"
+                },
+                "sedol": {
+                    "type": "string",
+                    "title": "7-character alphanumeric code assigned to securities listed on stock exchanges"
+                },
+                "isin": {
+                    "type": "string",
+                    "title": "12-character alphanumeric code that uniquely identifies a fixed income security across global markets"
+                },
+                "cins": {
+                    "type": "string",
+                    "title": "Variant of CUSIP used for international securities outside North America\n(-- api-linter: core::0144::message-field-plural=disabled\n aip.dev/not-precedent: We need to do this because CINS is the name of the identifier --)"
+                },
+                "bloombergTicker": {
+                    "type": "string",
+                    "title": "Unique identifier used by Bloomberg to represent a security which typically includes the security name and exchange code"
+                }
+            }
+        },
+        "brokerBrokerReference": {
+            "description": "Reference to a broker: this include the broker id, broker ticker and broker shortname.\nFor read operations, all fields are returned.\nFor write operations, at least one field is required. If multiple fields are provided, broker_id takes precedence followed by broker_shortname.",
+            "type": "object",
+            "properties": {
+                "brokerId": {
+                    "type": "string",
+                    "title": "broker id"
+                },
+                "brokerTicker": {
+                    "type": "string",
+                    "title": "broker ticker"
+                },
+                "brokerShortname": {
+                    "type": "string",
+                    "title": "broker shortname - display name for the broker across Aladdin apps"
+                }
+            }
+        },
+        "portfolioPortfolioReference": {
+            "description": "Reference to a portfolio. This includes both the portfolio ID and the portfolio ticker. \nFor read operations, both fields are returned. \nFor write operations, only one of the two is required. \nIf both are provided, the portfolio ID takes precedence over the portfolio ticker.",
+            "type": "object",
+            "properties": {
+                "portfolioId": {
+                    "type": "string",
+                    "title": "portfolio id"
+                },
+                "portfolioTicker": {
+                    "type": "string",
+                    "title": "portfolio ticker"
+                }
+            }
+        },
+        "rpcStatus": {
+            "description": "The `Status` type defines a logical error model that is suitable for\ndifferent programming environments, including REST APIs and RPC APIs. It is\nused by [gRPC](https://github.com/grpc). Each `Status` message contains\nthree pieces of data: error code, error message, and error details.\n\nYou can find out more about this error model and how to work with it in the\n[API Design Guide](https://cloud.google.com/apis/design/errors).",
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "message": {
+                    "description": "A developer-facing error message, which should be in English. Any\nuser-facing error message should be localized and sent in the\n[google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.",
+                    "type": "string"
+                },
+                "details": {
+                    "description": "A list of messages that carry the error details.  There is a common set of\nmessage types for APIs to use.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Any"
+                    }
+                }
+            }
+        },
+        "strategyStrategyReference": {
+            "description": "Reference to a strategy. This includes both the strategy ID and strategy name.\nFor read operations, both fields are returned.\nFor write operations, at least one field is required. If both are provided, strategy_id takes precedence.",
+            "type": "object",
+            "properties": {
+                "strategyId": {
+                    "type": "string",
+                    "title": "strategy id"
+                },
+                "strategyName": {
+                    "description": "The display name of the strategy.\nIf the strategy has a parent, the name must be prefixed with the parent name, separated by a colon.\nExample: \"US : BONDS\" (where \"US\" is the parent strategy).",
+                    "type": "string"
+                }
+            }
+        },
+        "v1LongrunningOperation": {
+            "description": "LongrunningOperation represents a long-running operation that is the result\nof a network API call.",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "The server-assigned id, which is only unique within the same service that\noriginally returns it. If you use the default HTTP mapping, the\n`id` should have the format of `operations/some/unique/id`.",
+                    "type": "string"
+                },
+                "meta": {
+                    "description": "Service-specific metadata associated with the operation.  It typically\ncontains progress information and common metadata such as create time.\nSome services might not provide such metadata.  Any method that returns a\nlong-running operation should document the metadata type, if any.",
+                    "$ref": "#/definitions/Any"
+                },
+                "done": {
+                    "description": "If the value is `false`, it means the operation is still in progress.\nIf true, the operation is completed, and either `error` or `response` is\navailable.",
+                    "type": "boolean"
+                },
+                "error": {
+                    "description": "The error result of the operation in case of failure or cancellation.",
+                    "$ref": "#/definitions/rpcStatus"
+                },
+                "response": {
+                    "description": "The normal response of the operation in case of success.  If the original\nmethod returns no data on success, such as `Delete`, the response is\n`google.protobuf.Empty`.  If the original method is standard\n`Get`/`Create`/`Update`, the response should be the resource.  For other\nmethods, the response should have the type `XxxResponse`, where `Xxx`\nis the original method name.  For example, if the original method name\nis `TakeSnapshot()`, the inferred response type is\n`TakeSnapshotResponse`.",
+                    "$ref": "#/definitions/Any"
+                }
+            }
+        },
+        "v2AssetCriterion": {
+            "description": "It represents asset-specific criteria.",
+            "type": "object",
+            "properties": {
+                "assetIds": {
+                    "description": "A comma-separated list of Aladdin CUSIPs. The default limit is 10 CUSIPs.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "classifications": {
+                    "description": "A list of asset classification, such as security group, type, etc.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AssetCriterionClassification"
+                    }
+                }
+            }
+        },
+        "v2AssetExpand": {
+            "type": "object",
+            "title": "Asset Expand",
+            "properties": {
+                "reference": {
+                    "description": "Reference to the asset.",
+                    "$ref": "#/definitions/assetAssetReference"
+                },
+                "summary": {
+                    "title": "Asset Summary",
+                    "$ref": "#/definitions/v2AssetSummary"
+                }
+            }
+        },
+        "v2AssetSummary": {
+            "type": "object",
+            "title": "Asset summary describe the security information",
+            "properties": {
+                "securityGroup": {
+                    "type": "string",
+                    "title": "Security group of an asset"
+                },
+                "securityType": {
+                    "type": "string",
+                    "title": "Security type of an asset"
+                },
+                "securityCurrency": {
+                    "type": "string",
+                    "title": "Security currency of an asset"
+                },
+                "issueCountryCode": {
+                    "type": "string",
+                    "title": "Asset Trading market an ISO code to identify markets, minimum length = 2, maximum length = 6"
+                },
+                "reference": {
+                    "description": "Reference to the asset.",
+                    "$ref": "#/definitions/assetAssetReference"
+                }
+            }
+        },
+        "v2BatchCancelTradesMetaData": {
+            "description": "Meta data related to a BatchCancelTradesResponse.",
+            "type": "object"
+        },
+        "v2BatchCancelTradesRequest": {
+            "type": "object",
+            "title": "BatchCancelTradesRequest represents the request to cancel multiple trades in batch.\n(-- api-linter: aladdin::9050::request-ids-field=disabled\n    aip.dev/not-precedent: No need for ids field. --)\n(-- api-linter: aladdin::9050::request-unknown-fields=disabled\n aip.dev/not-precedent: We need to do this because following request fields best suits for batch cancel api --)",
+            "required": [
+                "tradeKeys"
+            ],
+            "properties": {
+                "tradeKeys": {
+                    "description": "List of trades to be cancelled. At least one trade must be specified.\nUsers are advised to use small batch sizes and increase parallelism for performance.",
+                    "type": "array",
+                    "required": [
+                        "trade_keys"
+                    ],
+                    "items": {
+                        "$ref": "#/definitions/v2TradeKey"
+                    }
+                },
+                "config": {
+                    "description": "Options for trade cancellation.",
+                    "$ref": "#/definitions/v2CancelTradeConfig"
+                }
+            }
+        },
+        "v2BatchCancelTradesResponse": {
+            "type": "object",
+            "title": "BatchCancelTradesResponse represents the response for the BatchCancelTrades.\n(-- api-linter: aladdin::9050::response-results-field=disabled\n aip.dev/not-precedent: We need to do this because api result contains only trade summary not the complete trade --)",
+            "properties": {
+                "results": {
+                    "description": "Contains the results of the batch cancel trades operation.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v2TradeResult"
+                    }
+                }
+            }
+        },
+        "v2BatchPostTradesMetaData": {
+            "description": "Meta data related to a BatchPostTradesResponse.",
+            "type": "object"
+        },
+        "v2BatchPostTradesRequest": {
+            "type": "object",
+            "title": "BatchPostTradesRequest represents the request to post multiple trades in batch.\n(-- api-linter: aladdin::9050::request-ids-field=disabled\n    aip.dev/not-precedent: No need for ids field. --)\n(-- api-linter: aladdin::9050::request-unknown-fields=disabled\n aip.dev/not-precedent: We need to do this because following request fields best suits for batch post api --)",
+            "required": [
+                "blockTrades"
+            ],
+            "properties": {
+                "blockTrades": {
+                    "description": "List of trades to be posted. At least one trade must be specified.\nUsers are advised to use small batch sizes and increase parallelism for performance.",
+                    "type": "array",
+                    "required": [
+                        "block_trades"
+                    ],
+                    "items": {
+                        "$ref": "#/definitions/v2BlockTrade"
+                    }
+                },
+                "config": {
+                    "description": "Options for trade posting.",
+                    "$ref": "#/definitions/v2PostTradeConfig"
+                }
+            }
+        },
+        "v2BatchPostTradesResponse": {
+            "type": "object",
+            "title": "BatchPostTradesResponse represents the response for the BatchPostTrades.\n(-- api-linter: aladdin::9050::response-results-field=disabled\n aip.dev/not-precedent: We need to do this because api result contains only trade summary not the complete trade --)",
+            "properties": {
+                "results": {
+                    "description": "Contains the results of the batch post trades operation.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v2TradeResult"
+                    }
+                }
+            }
+        },
+        "v2BlockTrade": {
+            "type": "object",
+            "title": "BlockTrade resource",
+            "properties": {
+                "trades": {
+                    "type": "array",
+                    "title": "The trades contained in this BlockTrade\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n    aip.dev/not-precedent: There is a conflicting trades field in analytics/portfolio_analytics/optimization/v2/optimization_data_model.proto which should rather be positions. --)",
+                    "items": {
+                        "$ref": "#/definitions/v2Trade"
+                    }
+                },
+                "brokerReason": {
+                    "type": "string",
+                    "title": "Broker reason"
+                },
+                "couponType": {
+                    "type": "string",
+                    "title": "Coupon type"
+                },
+                "dealingCapacity": {
+                    "type": "string",
+                    "title": "Dealing capacity of the broker"
+                },
+                "dropRate": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Drop rate"
+                },
+                "executionTimeSource": {
+                    "title": "Execution time source",
+                    "$ref": "#/definitions/v2ExecutionTimeSource"
+                },
+                "executionTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "title": "Executed timestamp"
+                },
+                "settlementCurrency": {
+                    "type": "string",
+                    "title": "Settlement currency"
+                },
+                "coupon": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Trade coupon"
+                },
+                "duration": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Trade duration\n(-- api-linter: core::0142::time-field-type=disabled\n aip.dev/not-precedent: We need to do this because we are not using this field in time perspective --)"
+                },
+                "factor": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Trade factor\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because this is specific to trade factor --)"
+                },
+                "pricingIndex": {
+                    "type": "string",
+                    "title": "Trade pricing index"
+                },
+                "pricingSpread": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Trade pricing spread"
+                },
+                "tradeDate": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "Trade date\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because Date is most suitable data type here --)"
+                },
+                "factorDate": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "Trade factor date"
+                },
+                "settlementDate": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "Settlement date for the BlockTrade"
+                },
+                "actualSettlementDate": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "Actual settlement date"
+                },
+                "assetReference": {
+                    "description": "Reference to the asset associated with the BlockTrade.",
+                    "$ref": "#/definitions/assetAssetReference"
+                },
+                "authorizedTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "title": "Trade authorized time. (Output only field)",
+                    "readOnly": true
+                },
+                "brokerReference": {
+                    "title": "Broker reference",
+                    "$ref": "#/definitions/brokerBrokerReference"
+                },
+                "brokerDeskId": {
+                    "type": "string",
+                    "title": "Broker desk"
+                },
+                "collateralExposureType": {
+                    "type": "string",
+                    "title": "Collateral exposure type"
+                },
+                "confirmedWith": {
+                    "type": "string",
+                    "title": "Trade confirmed with - external party which confirms the trade\n(-- api-linter: core::0140::prepositions=disabled\n aip.dev/not-precedent: We need to do this because we want to avoid confusion with confirmed by field --)"
+                },
+                "confirmedBy": {
+                    "type": "string",
+                    "title": "Trade confirmed by initials\n(-- api-linter: core::0140::prepositions=disabled\n aip.dev/not-precedent: We need to do this because we want to avoid confusion with confirmed with fields--)\n(-- api-linter: core::0124::valid-reference=disabled\n    aip.dev/not-precedent: This field is a user id. --)"
+                },
+                "convexity": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Convexity of the security at the time of trade"
+                },
+                "enteredBy": {
+                    "type": "string",
+                    "title": "Initials for trade enterer\n(-- api-linter: core::0140::prepositions=disabled\n aip.dev/not-precedent: We need to do this because we want consistency with other fields like confirmed_by --)\n(-- api-linter: core::0124::valid-reference=disabled\n    aip.dev/not-precedent: This field is a user id. --)"
+                },
+                "entryTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "title": "Trade entry time. (Output only field)",
+                    "readOnly": true
+                },
+                "executingBrokerReference": {
+                    "title": "Executing broker reference",
+                    "$ref": "#/definitions/brokerBrokerReference"
+                },
+                "executingBrokerDeskId": {
+                    "type": "string",
+                    "title": "Executing broker desk"
+                },
+                "multiFundId": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Multi fund id used to map BlockTrades in Aladdin. (Output only field)",
+                    "readOnly": true
+                },
+                "percentYield": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Trade yield"
+                },
+                "placementId": {
+                    "type": "string",
+                    "title": "Placement id for the trade. (Output only field)",
+                    "readOnly": true
+                },
+                "prepayType": {
+                    "type": "string",
+                    "title": "Prepayment type. (Output only field) Please refer to Aladdin decode 'PREPAY_MAPPING' to get the list of valid values",
+                    "readOnly": true
+                },
+                "price": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Price\n(-- api-linter: aladdin::0901::prefix-required-field=disabled\n    aip.dev/not-precedent: This is the price of all trades in the block. --)"
+                },
+                "psa": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Prepayment rate used by trader. (Output only field)",
+                    "readOnly": true
+                },
+                "purpose": {
+                    "type": "string",
+                    "title": "Trade purpose. Please refer to Aladdin decode 'TrdPurpose' to get the list of valid values\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n    aip.dev/not-precedent: Type is specific to trading. --)"
+                },
+                "reviewTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "title": "Trade review time. (Output only field)",
+                    "readOnly": true
+                },
+                "status": {
+                    "type": "string",
+                    "title": "Trade status. (Output only field) Its value can either be ' ' for active or 'C' for cancelled",
+                    "readOnly": true
+                },
+                "touchCount": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Trade touch count. (Output only field)",
+                    "readOnly": true
+                },
+                "transactionType": {
+                    "type": "string",
+                    "title": "Transaction type\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n    aip.dev/not-precedent: We keep plain string type as the possible transaction_types can change dynamically. --)"
+                },
+                "traderInitials": {
+                    "type": "string",
+                    "title": "Trader initials\n(-- api-linter: core::0144::message-field-plural=disabled\n aip.dev/not-precedent: Initials can be formed using one string --)"
+                },
+                "version": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Trade version. (Output only field)\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n    aip.dev/not-precedent: We need to do this because version in trade proto is of type int32 everywhere. --)",
+                    "readOnly": true
+                },
+                "userDefinedFields": {
+                    "type": "array",
+                    "title": "User Defined Trade Fields\n(-- api-linter:aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because trade user defined fields are configured using TE_CUSTOM decode --)",
+                    "items": {
+                        "$ref": "#/definitions/v2UserDefinedField"
+                    }
+                },
+                "accountingDesignation": {
+                    "type": "string",
+                    "title": "Trade accounting designation"
+                },
+                "effectiveRate": {
+                    "description": "Effective financing rate for rolls. Can be compared to repo rates. Also stores commission-adjusted yield for issues.",
+                    "type": "number",
+                    "format": "double"
+                },
+                "tradeYieldToCall": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Trade yield to call. (Output only field)\n(-- api-linter: core::0140::prepositions=disabled\n aip.dev/not-precedent: We need to do this because this is the only naming convention that makes sense here  --)",
+                    "readOnly": true
+                },
+                "weightedAverageCoupon": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Weighted Average Coupon. (Input only field)"
+                },
+                "weightedAverageMaturity": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Weighted Average Maturity. (Input only field)"
+                },
+                "poolStipulations": {
+                    "type": "string",
+                    "title": "Pool Stipulations\n(-- api-linter: core::0144::message-field-plural=disabled\n aip.dev/not-precedent: Specifies Pool stipulations --)"
+                },
+                "tbaStipulations": {
+                    "type": "string",
+                    "title": "TBA Stipulations\n(-- api-linter: core::0144::message-field-plural=disabled\n aip.dev/not-precedent: Specifies TBA stipulations --)"
+                },
+                "swapPoints": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Swap Points. (Input only field)\n(-- api-linter: core::0144::message-field-plural=disabled\n aip.dev/not-precedent: We need to do this because as swap_points is a standard term--)"
+                },
+                "transferExternalAccountName": {
+                    "type": "string",
+                    "title": "Name of Transfer External Account. (Input only field)"
+                },
+                "transferPortfolioReference": {
+                    "title": "Transfer Portfolio (Input only field)",
+                    "$ref": "#/definitions/portfolioPortfolioReference"
+                },
+                "settlementCurrencyPair": {
+                    "type": "string",
+                    "title": "Settlement Exchange Rate Currency Pair. (Input only field)"
+                },
+                "priceType": {
+                    "title": "Price Type. (Input only field)\n(-- api-linter: aladdin::0901::prefix-required-field=disabled\n aip.dev/not-precedent: We need to do this because this is price type for the trade--)",
+                    "$ref": "#/definitions/v2PriceType"
+                },
+                "reinvestmentRate": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Reinvestment Rate \n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because this reinvestment rate is tied to the trade --)"
+                },
+                "settlementFxRate": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Settlement FX rate"
+                },
+                "tradeDiscountPrice": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Trade discount price. (Output only field)",
+                    "readOnly": true
+                },
+                "tradeComments": {
+                    "type": "array",
+                    "title": "Trade comments",
+                    "items": {
+                        "$ref": "#/definitions/v2TradeComment"
+                    }
+                },
+                "tradeQuotes": {
+                    "type": "array",
+                    "title": "Trade quotes",
+                    "items": {
+                        "$ref": "#/definitions/v2TradeQuote"
+                    }
+                },
+                "daysToMaturity2a7": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Days to maturity (Financial rule 2a7). (Output only field)\n(-- api-linter: core::0140::prepositions=disabled\n aip.dev/not-precedent: We need to do this because days to maturity is the most suitable name --)\n(-- api-linter: core::0140::numbers=disabled\n aip.dev/not-precedent: We need to do this because 2a7 is a rule to calculate maturity. --)",
+                    "readOnly": true
+                },
+                "forwardPoints": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Forward Points. (Input only field)\n(-- api-linter: core::0144::message-field-plural=disabled\n aip.dev/not-precedent: These are forwards points for the forward leg --)"
+                },
+                "forwardPrice": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Forward Price. (Input only field)"
+                },
+                "forwardAssetReference": {
+                    "title": "Forward asset reference. (Input only field)",
+                    "$ref": "#/definitions/assetAssetReference"
+                },
+                "fxSpotPrice": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "FX Spot Price . (Input only field)"
+                },
+                "asset": {
+                    "title": "Security associated with the BlockTrade - Can be expanded to summary or reference. (Output only field)",
+                    "$ref": "#/definitions/v2AssetExpand"
+                },
+                "suppressExternalNotification": {
+                    "description": "Indicates whether external notifications should be suppressed.",
+                    "type": "boolean"
+                }
+            }
+        },
+        "v2BlockTradeSnippet": {
+            "description": "BlockTradeSnippet represents a summary of a BlockTrade.",
+            "type": "object",
+            "properties": {
+                "assetId": {
+                    "type": "string",
+                    "title": "Security associated with this BlockTrade"
+                },
+                "trades": {
+                    "type": "array",
+                    "title": "The TradeSnippets contained in this BlockTradeSnippet",
+                    "items": {
+                        "$ref": "#/definitions/v2TradeSnippet"
+                    }
+                }
+            }
+        },
+        "v2BrokerCriterion": {
+            "description": "It represents broker-specific criteria.",
+            "type": "object",
+            "properties": {
+                "brokerReferences": {
+                    "description": "A list of broker references for filtering trades.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/brokerBrokerReference"
+                    }
+                },
+                "executingBrokerReferences": {
+                    "description": "A list of executing broker references for filtering trades.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/brokerBrokerReference"
+                    }
+                }
+            }
+        },
+        "v2CancelTradeConfig": {
+            "type": "object",
+            "title": "CancelTradeConfig represents options used to cancel trades",
+            "properties": {
+                "suppressExternalNotification": {
+                    "description": "Indicates whether external notifications should be suppressed.",
+                    "type": "boolean"
+                },
+                "cancelEntireBlock": {
+                    "description": "Indicates whether the entire block of trades should be cancelled.",
+                    "type": "boolean"
+                }
+            }
+        },
+        "v2CancelTradeRequest": {
+            "description": "CancelTradeRequest represents the request to cancel a trade.",
+            "type": "object",
+            "properties": {
+                "tradeKey": {
+                    "description": "Specifies the key of the trade to be cancelled.",
+                    "$ref": "#/definitions/v2TradeKey"
+                },
+                "config": {
+                    "description": "Options for trade cancellation.",
+                    "$ref": "#/definitions/v2CancelTradeConfig"
+                }
+            }
+        },
+        "v2CancelTradeResponse": {
+            "description": "CancelTradeResponse represents the response for the CancelTrade.",
+            "type": "object",
+            "properties": {
+                "result": {
+                    "description": "Contains the result of the cancel trade operation.",
+                    "$ref": "#/definitions/v2TradeResult"
+                }
+            }
+        },
+        "v2Contract": {
+            "type": "object",
+            "title": "Linked Contract Trade Reference",
+            "properties": {
+                "assetReference": {
+                    "title": "Cusip or security id",
+                    "$ref": "#/definitions/assetAssetReference"
+                },
+                "quantity": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Quote quantity\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n    aip.dev/not-precedent: Type is specific to trade contract. --)"
+                },
+                "invnum": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Trade invnum\n(-- api-linter: core::0122::resource-reference-type=disabled\n aip.dev/not-precedent: We need to do this because unique identifier for Trade is a signed int --)"
+                },
+                "tradeNumber": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "contract trade number. (Output only field)",
+                    "readOnly": true
+                },
+                "currencyCode": {
+                    "type": "string",
+                    "title": "contract currency. (Output only field)",
+                    "readOnly": true
+                }
+            }
+        },
+        "v2DateTimeCriterion": {
+            "description": "It represents date and time-specific criteria. At least one field must be set in this criterion.",
+            "type": "object",
+            "properties": {
+                "tradeDate": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "It specifies date of trade. Expected format: YYYY-MM-DD\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because Date is the best suit data type for trade date --)"
+                },
+                "settlementDate": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "It specifies settlement date of trade. Expected format: YYYY-MM-DD"
+                },
+                "modifyTimeRange": {
+                    "description": "It represents a time range with start and end time of trade modification.",
+                    "$ref": "#/definitions/DateTimeCriterionModifyTimeRange"
+                }
+            }
+        },
+        "v2ExecutionTimeSource": {
+            "description": "- EXECUTION_TIME_SOURCE_UNSPECIFIED: No value specified\n - EXECUTION_TIME_SOURCE_VENUE: Time sent from the trading venue\n - EXECUTION_TIME_SOURCE_AUTHORIZED_TIME: Picked up from trade authorized time\n - EXECUTION_TIME_SOURCE_ENTRY_TIME: Picked up from trade entry time\n - EXECUTION_TIME_SOURCE_MANUAL: Time manually entered by user",
+            "type": "string",
+            "title": "The source of the trade execution time value",
+            "default": "EXECUTION_TIME_SOURCE_UNSPECIFIED",
+            "enum": [
+                "EXECUTION_TIME_SOURCE_UNSPECIFIED",
+                "EXECUTION_TIME_SOURCE_VENUE",
+                "EXECUTION_TIME_SOURCE_AUTHORIZED_TIME",
+                "EXECUTION_TIME_SOURCE_ENTRY_TIME",
+                "EXECUTION_TIME_SOURCE_MANUAL"
+            ]
+        },
+        "v2ExternalTradeReference": {
+            "description": "External Trade Reference.",
+            "type": "object",
+            "properties": {
+                "externalInvnum1": {
+                    "type": "string",
+                    "title": "External invnum 1"
+                },
+                "externalInvnum2": {
+                    "type": "string",
+                    "title": "External invnum 2"
+                },
+                "accountCode": {
+                    "type": "string",
+                    "format": "int64",
+                    "title": "Account code"
+                }
+            }
+        },
+        "v2FilterQuery": {
+            "description": "It represents filter query that captures various criteria and options for filtering trades.",
+            "type": "object",
+            "properties": {
+                "criteria": {
+                    "title": "It contains criteria to filter trade.\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because this is specific to trade FilterQuery --)\n(-- api-linter: core::0144::message-field-plural=disabled\n aip.dev/not-precedent: We need to do this because the field contains multiple criteria but in form of multiple attributes in a single message --)",
+                    "$ref": "#/definitions/v2FilterQueryCriteria"
+                },
+                "options": {
+                    "type": "array",
+                    "title": "Options for loading additional trade data, such as relationships, collaterals, external trades etc.\n\"FILTER_QUERY_OPTION_UNSPECIFIED\" - Unspecified option (Default)\n\"FILTER_QUERY_OPTION_LOAD_TRADE_RELATIONSHIP\" - Option to load trade relationships\n\"FILTER_QUERY_OPTION_LOAD_EXTERNAL_TRADE_REFERENCE\" - Option to load external trade references\n\"FILTER_QUERY_OPTION_LOAD_TRADE_COLLATERAL\" - Option to load trade collaterals\n\"FILTER_QUERY_OPTION_LOAD_TRADE_FX_LEGS\" - Option to load trade fx legs\n(-- api-linter: aladdin::9016::query-message-criterion=disabled\n aip.dev/not-precedent: We need to do this because this field doesn't represents a criterion --)\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because this is specific to trade FilterQuery --)",
+                    "items": {
+                        "$ref": "#/definitions/v2FilterQueryOption"
+                    }
+                }
+            }
+        },
+        "v2FilterQueryCriteria": {
+            "description": "It represent the filter query criteria.",
+            "type": "object",
+            "properties": {
+                "portfolio": {
+                    "title": "It specifies the criteria based on portfolios to filter trade.\nUse either portfolio group ticker to filter by a portfolio groups and it's all children portfolios\nor portfolio references to filter by specific portfolio identifiers, but not both.\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because this is specific to trade FilterQueryCriterion --)",
+                    "$ref": "#/definitions/v2PortfolioCriterion"
+                },
+                "dateTime": {
+                    "title": "It specifies filtering based on date and time.\nAt least one field from date time criterion is required.\n(-- api-linter: core::0142::time-field-type=disabled\n aip.dev/not-precedent: We need to do this because we are not using this field in time perspective --)",
+                    "$ref": "#/definitions/v2DateTimeCriterion"
+                },
+                "trade": {
+                    "description": "It allows filtering based on trade-specific characteristics. It is an optional field.",
+                    "$ref": "#/definitions/v2TradeCriterion"
+                },
+                "asset": {
+                    "title": "It allows filtering based on asset-specific details. It is an optional field.\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because asset represents one of filter criterion inside filter query criterion here --)",
+                    "$ref": "#/definitions/v2AssetCriterion"
+                },
+                "broker": {
+                    "title": "It allows filtering based on broker information associated with the trades. It is an optional field.\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because broker represents one of filter criterion inside filter query criterion here --)",
+                    "$ref": "#/definitions/v2BrokerCriterion"
+                }
+            }
+        },
+        "v2FilterQueryOption": {
+            "description": "- FILTER_QUERY_OPTION_UNSPECIFIED: Unspecified Option.\n - FILTER_QUERY_OPTION_LOAD_TRADE_RELATIONSHIP: Option to load trade relationships.\n - FILTER_QUERY_OPTION_LOAD_EXTERNAL_TRADE_REFERENCE: Option to load external references.\n - FILTER_QUERY_OPTION_LOAD_TRADE_COLLATERAL: Option to load trade collateral.\n - FILTER_QUERY_OPTION_LOAD_TRADE_FX_LEGS: Option to load trade fx legs.",
+            "type": "string",
+            "title": "Enumeration for various filtering options",
+            "default": "FILTER_QUERY_OPTION_UNSPECIFIED",
+            "enum": [
+                "FILTER_QUERY_OPTION_UNSPECIFIED",
+                "FILTER_QUERY_OPTION_LOAD_TRADE_RELATIONSHIP",
+                "FILTER_QUERY_OPTION_LOAD_EXTERNAL_TRADE_REFERENCE",
+                "FILTER_QUERY_OPTION_LOAD_TRADE_COLLATERAL",
+                "FILTER_QUERY_OPTION_LOAD_TRADE_FX_LEGS"
+            ]
+        },
+        "v2FilterTradesRequest": {
+            "description": "It represents a request to filter trades.",
+            "type": "object",
+            "properties": {
+                "pageSize": {
+                    "description": "The maximum number of trades to return. The service may return fewer than this value. If unspecified or 0, the default value will be applied.",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "pageToken": {
+                    "description": "A page token, received from a previous 'filterTrades' call. Provide this to retrieve the subsequent page.\nWhen paginating, all other parameters provided to 'filterTrades' must match the call that provided the page token.",
+                    "type": "string"
+                },
+                "query": {
+                    "description": "It contains the criterion, options to filter trade.",
+                    "$ref": "#/definitions/v2FilterQuery"
+                },
+                "expands": {
+                    "description": "Specifies which related reference data should be included in the response.\nCurrently, only asset-related information can be expanded. By default, the response includes just the asset ID.\nTo get more detailed asset information, use \"asset.summary\" to include a summary with additional asset details.\nFor full usage guidance, refer to the Trade API release notes.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "v2FilterTradesResponse": {
+            "type": "object",
+            "title": "It represents the response of the filterTrade API.\n(-- api-linter: aladdin::9016::response-message=disabled\n aip.dev/not-precedent: We need to do this because the response contains list of block trades, not trades --)",
+            "properties": {
+                "blockTrades": {
+                    "description": "A list of trades that match the filtering criteria.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v2BlockTrade"
+                    }
+                },
+                "nextPageToken": {
+                    "description": "A token to retrieve the next page of results in subsequent request.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "It contains information about the processed result so far in pagination.",
+                    "$ref": "#/definitions/rpcStatus"
+                }
+            }
+        },
+        "v2MBSCCType": {
+            "description": "- MBSCC_TYPE_UNSPECIFIED: Unspecified value\n - MBSCC_TYPE_TRADE_FOR_TRADE: Trade for Trade\n - MBSCC_TYPE_SETTLEMENT_BALANCE_ORDER: Settlement Balance Order",
+            "type": "string",
+            "title": "Mortgage-Backed Securities Clearing Corporation type",
+            "default": "MBSCC_TYPE_UNSPECIFIED",
+            "enum": [
+                "MBSCC_TYPE_UNSPECIFIED",
+                "MBSCC_TYPE_TRADE_FOR_TRADE",
+                "MBSCC_TYPE_SETTLEMENT_BALANCE_ORDER"
+            ]
+        },
+        "v2PortfolioCriterion": {
+            "description": "It represents portfolio-specific criteria. Only one field should be set in this criterion.",
+            "type": "object",
+            "properties": {
+                "portfolioGroupTicker": {
+                    "description": "A ticker that represents a group of portfolios.",
+                    "type": "string"
+                },
+                "portfolioReferences": {
+                    "description": "A list of portfolio ids or other unique identifiers.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/portfolioPortfolioReference"
+                    }
+                }
+            }
+        },
+        "v2PostTradeConfig": {
+            "description": "PostTradeConfig represents options used to post trades.",
+            "type": "object",
+            "properties": {
+                "mode": {
+                    "description": "Specifies the mode for posting trade.",
+                    "$ref": "#/definitions/v2PostingMode"
+                },
+                "overrideRelationships": {
+                    "type": "boolean",
+                    "title": "Indicates whether relationships should be overridden.\n(-- api-linter: core::0144::message-field-plural=disabled\n    aip.dev/not-precedent: This is a single value. --)"
+                },
+                "overrideCharges": {
+                    "type": "boolean",
+                    "title": "Indicates whether charges should be overridden.\n(-- api-linter: core::0144::message-field-plural=disabled\n    aip.dev/not-precedent: This is a single value. --)"
+                },
+                "updateEntireBlock": {
+                    "description": "Indicates whether the entire block of trades should be updated.",
+                    "type": "boolean"
+                },
+                "accountCode": {
+                    "description": "Specifies the account code of the external account.",
+                    "type": "string",
+                    "format": "int64"
+                },
+                "entityType": {
+                    "description": "Specifies the entity type of the external account.",
+                    "type": "string"
+                },
+                "entity": {
+                    "description": "Specifies the entity.",
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "v2PostTradeRequest": {
+            "description": "PostTradeRequest represents the request to post a trade.",
+            "type": "object",
+            "properties": {
+                "blockTrade": {
+                    "description": "Specifies the trade to be posted.",
+                    "$ref": "#/definitions/v2BlockTrade"
+                },
+                "config": {
+                    "description": "Options for trade posting.",
+                    "$ref": "#/definitions/v2PostTradeConfig"
+                }
+            }
+        },
+        "v2PostTradeResponse": {
+            "description": "PostTradeResponse represents the response for the PostTrade.",
+            "type": "object",
+            "properties": {
+                "result": {
+                    "description": "Contains the result of the post trade operation.",
+                    "$ref": "#/definitions/v2TradeResult"
+                }
+            }
+        },
+        "v2PostingMode": {
+            "description": "PostingMode defines the action to take when posting trades.\n\n - POSTING_MODE_UNSPECIFIED: The posting mode is unspecified.\n - POSTING_MODE_NEW: The posting mode for creating new trades.\n - POSTING_MODE_UPDATE: The posting mode for updating existing trades.",
+            "type": "string",
+            "default": "POSTING_MODE_UNSPECIFIED",
+            "enum": [
+                "POSTING_MODE_UNSPECIFIED",
+                "POSTING_MODE_NEW",
+                "POSTING_MODE_UPDATE"
+            ]
+        },
+        "v2PriceType": {
+            "description": "- PRICE_TYPE_UNSPECIFIED: No value specified\n - PRICE_TYPE_DIRTY: Price Type - Dirty\n - PRICE_TYPE_YIELD: Price Type - Yield\n - PRICE_TYPE_CLEAN: Price Type - Clean\n - PRICE_TYPE_AMORTIZED: Price Type - Amortized\n - PRICE_TYPE_AMORTIZED_DIRTY: Price Type - Amortized and Dirty\n - PRICE_TYPE_DISCOUNTED: Price Type - Discounted",
+            "type": "string",
+            "title": "Price Type for the trade price",
+            "default": "PRICE_TYPE_UNSPECIFIED",
+            "enum": [
+                "PRICE_TYPE_UNSPECIFIED",
+                "PRICE_TYPE_DIRTY",
+                "PRICE_TYPE_YIELD",
+                "PRICE_TYPE_CLEAN",
+                "PRICE_TYPE_AMORTIZED",
+                "PRICE_TYPE_AMORTIZED_DIRTY",
+                "PRICE_TYPE_DISCOUNTED"
+            ]
+        },
+        "v2RetrieveQuery": {
+            "description": "It represents query of retrieve trade request, that contains criterion and options to query trades.",
+            "type": "object",
+            "properties": {
+                "criteria": {
+                    "title": "Criteria to retrieve trade.\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because this is specific to trade RetrieveQuery --)\n(-- api-linter: core::0144::message-field-plural=disabled\n aip.dev/not-precedent: We need to do this because the field contains multiple criteria but in form of multiple attributes in a single message --)",
+                    "$ref": "#/definitions/v2RetrieveQueryCriteria"
+                },
+                "options": {
+                    "type": "array",
+                    "title": "Options for loading additional trade data such as complete block trade.\n\"RETRIEVE_QUERY_OPTION_UNSPECIFIED\" - Unspecified option (Default)\n\"RETRIEVE_QUERY_OPTION_LOAD_COMPLETE_BLOCK\" - Option to load complete block trade\n(-- api-linter: aladdin::9016::query-message-criterion=disabled\n aip.dev/not-precedent: We need to do this because this field doesn't represents a criterion --)\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because this is specific to trade RetrieveQuery --)",
+                    "items": {
+                        "$ref": "#/definitions/v2RetrieveQueryOption"
+                    }
+                }
+            }
+        },
+        "v2RetrieveQueryCriteria": {
+            "description": "It represents retrieve query criterion. Only one criterion should be set in a request.",
+            "type": "object",
+            "properties": {
+                "tradeKeys": {
+                    "description": "A list of trade key criteria.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v2TradeKeyCriterion"
+                    }
+                },
+                "externTradeKeys": {
+                    "description": "A list of external trade key criteria.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v2ExternalTradeReference"
+                    }
+                },
+                "orderKeys": {
+                    "description": "A list of order ids.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "v2RetrieveQueryOption": {
+            "description": "Enumeration for various retrieve options.\n\n - RETRIEVE_QUERY_OPTION_UNSPECIFIED: Unspecified option.\n - RETRIEVE_QUERY_OPTION_LOAD_COMPLETE_BLOCK: Option to load complete block trade.",
+            "type": "string",
+            "default": "RETRIEVE_QUERY_OPTION_UNSPECIFIED",
+            "enum": [
+                "RETRIEVE_QUERY_OPTION_UNSPECIFIED",
+                "RETRIEVE_QUERY_OPTION_LOAD_COMPLETE_BLOCK"
+            ]
+        },
+        "v2RetrieveTradesRequest": {
+            "type": "object",
+            "title": "It represents the request of retrieve trade API.\n(-- api-linter: core::0158::request-page-size-field=disabled\n aip.dev/not-precedent: We need to do this because pagination is not supported here --)\n(-- api-linter: core::0158::request-page-token-field=disabled\n aip.dev/not-precedent: We need to do this because pagination is not supported here --)",
+            "properties": {
+                "query": {
+                    "description": "This field contains the criterion, option to retrieve trade.",
+                    "$ref": "#/definitions/v2RetrieveQuery"
+                },
+                "expands": {
+                    "description": "Specifies which related reference data should be included in the response.\nCurrently, only asset-related information can be expanded. By default, the response includes just the asset ID.\nTo get more detailed asset information, use \"asset.summary\" to include a summary with additional asset details.\nFor full usage guidance, refer to the Trade API release notes.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "v2RetrieveTradesResponse": {
+            "type": "object",
+            "title": "It represents response of retrieve trade API.\n(-- api-linter: aladdin::9016::response-message=disabled\n aip.dev/not-precedent: We need to do this because the response contains list of block trades, not trades --)\n(-- api-linter: core::0158::response-next-page-token-field=disabled\n aip.dev/not-precedent: We need to do this because pagination is not supported --)",
+            "properties": {
+                "blockTrades": {
+                    "description": "The list of block trades.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v2BlockTrade"
+                    }
+                },
+                "status": {
+                    "description": "It contains information about how many request processed successfully or partially or error out.",
+                    "$ref": "#/definitions/rpcStatus"
+                }
+            }
+        },
+        "v2Trade": {
+            "type": "object",
+            "title": "Trade resource",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "title": "The unique identifier of the trade"
+                },
+                "portfolioReference": {
+                    "title": "Portfolio reference - cannot be null",
+                    "$ref": "#/definitions/portfolioPortfolioReference"
+                },
+                "invnum": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Invnum\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because we want to get the trade using the invnum --)"
+                },
+                "tradeNumber": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Trade number"
+                },
+                "quantity": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Unsigned quantity also known as orig_face of the trade\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because DoubleValue is the most suitable here --)"
+                },
+                "tradeRelationships": {
+                    "type": "array",
+                    "title": "List of trade relationships",
+                    "items": {
+                        "$ref": "#/definitions/v2TradeRelationship"
+                    }
+                },
+                "modifyTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "title": "Trade modify time in Aladdin timezone. (Output only field)",
+                    "readOnly": true
+                },
+                "interest": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Interest value"
+                },
+                "principal": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Trade principal"
+                },
+                "orderId": {
+                    "type": "string",
+                    "title": "Order id for the trade - add reference"
+                },
+                "strategyReference": {
+                    "title": "Strategy reference",
+                    "$ref": "#/definitions/strategyStrategyReference"
+                },
+                "seriesNumber": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Series number. (Output only field)",
+                    "readOnly": true
+                },
+                "commission": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Commission in settle_currency. (Output only field)",
+                    "readOnly": true
+                },
+                "fee": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Trade fees. (Output only field)\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because DoubleValue is the most suitable here --)",
+                    "readOnly": true
+                },
+                "additionalTradeCharge": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Additional trade charge or commission on trade that doesn't impact net money. (Output only field)",
+                    "readOnly": true
+                },
+                "settlementInstructionId1": {
+                    "type": "string",
+                    "title": "The settlement instruction id1"
+                },
+                "allocationAmount": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Allocation amount. (Output only field)",
+                    "readOnly": true
+                },
+                "exchangeRate": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Exchange rate  \n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because DoubleValue is the most suitable here --)"
+                },
+                "exchange": {
+                    "type": "string",
+                    "title": "Exchange"
+                },
+                "rollFee": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Roll fee. (Output only field)",
+                    "readOnly": true
+                },
+                "effectiveTermDate": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "Trade effective term date. (Output only field)",
+                    "readOnly": true
+                },
+                "collaterals": {
+                    "type": "array",
+                    "title": "Trade Collaterals  \n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because it is trade collateral --)",
+                    "items": {
+                        "$ref": "#/definitions/v2TradeCollateral"
+                    }
+                },
+                "currentFactoredDownAmount": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Current (factored down) amount. For a trade, this is the trade quantity * factor. (Output only field)",
+                    "readOnly": true
+                },
+                "interestAtMaturity": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Interest at maturity for cash trades, Calculated field. By Aladdin® convention, incoming money is negative, and outgoing money is positive. (Output only field)\n(-- api-linter: core::0140::prepositions=disabled\n aip.dev/not-precedent: We need to do this because this is the most suitable name for this field --)",
+                    "readOnly": true
+                },
+                "externalTradeReferences": {
+                    "type": "array",
+                    "title": "External Trade Reference",
+                    "items": {
+                        "$ref": "#/definitions/v2ExternalTradeReference"
+                    }
+                },
+                "tradeCharges": {
+                    "type": "array",
+                    "title": "Trade charges",
+                    "items": {
+                        "$ref": "#/definitions/v2TradeCharge"
+                    }
+                },
+                "tradeFlags": {
+                    "title": "Trade Flags. flag's value are unset or unspecified by default\n(-- api-linter: core::0144::message-field-plural=disabled\n aip.dev/not-precedent: We need to do this because trade flags contains multiple flags. --)",
+                    "$ref": "#/definitions/v2TradeFlags"
+                },
+                "forwardExternalTradeReferences": {
+                    "type": "array",
+                    "title": "Forward External Trade Reference. (Input only field)",
+                    "items": {
+                        "$ref": "#/definitions/v2ExternalTradeReference"
+                    }
+                },
+                "forwardInterest": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Forward Interest. (Input only field)"
+                },
+                "forwardPrincipal": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Forward Principal. (Input only field)"
+                },
+                "forwardQuantity": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Forward Quantity. (Input only field)"
+                },
+                "forwardSettlementInstructionId1": {
+                    "type": "string",
+                    "title": "The forward settlement instruction id1. (Input only field)"
+                },
+                "contracts": {
+                    "type": "array",
+                    "title": "Linked Contract Trades",
+                    "items": {
+                        "$ref": "#/definitions/v2Contract"
+                    }
+                },
+                "mortgageBackedSecuritiesClearingCorporationType": {
+                    "description": "A netting flag to indicate settlement system for MBS securities. The valid values \"Settlement Balance Order\" or \"Trade for Trade\".",
+                    "$ref": "#/definitions/v2MBSCCType"
+                },
+                "fxLegs": {
+                    "title": "Trade FX legs. (Output only field)",
+                    "$ref": "#/definitions/v2TradeFXLegs"
+                }
+            }
+        },
+        "v2TradeCharge": {
+            "type": "object",
+            "title": "Trade charge\n(-- api-linter: aladdin::0901::prefix-required-field=disabled\n aip.dev/not-precedent: We need to do this because prefix of all field would be trade_charge --)",
+            "properties": {
+                "amount": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Charge amount. This field can be positive or negative: positive means you are paying the charge (usual case). Negative means you are earning the charge (rare).\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n    aip.dev/not-precedent: Type is specific to trade charge. --)"
+                },
+                "calculationType": {
+                    "description": "Calculation method. Please refer to the Aladdin decodes TRD_CHARGE_CALC to get the list of valid values.",
+                    "type": "string"
+                },
+                "rate": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Rate"
+                },
+                "rateType": {
+                    "description": "Type of rate. (Output only field) Please refer to the Aladdin decodes CHARGERATETYPES to get the list of valid values.",
+                    "type": "string",
+                    "readOnly": true
+                },
+                "category": {
+                    "type": "string",
+                    "title": "Charge type or category"
+                }
+            }
+        },
+        "v2TradeCollateral": {
+            "type": "object",
+            "title": "Collateral for the Trade",
+            "properties": {
+                "assetReference": {
+                    "title": "Collateral Security",
+                    "$ref": "#/definitions/assetAssetReference"
+                },
+                "quantity": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Collateral quantity\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n    aip.dev/not-precedent: Type is specific to trade collateral. --)"
+                },
+                "principal": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Principal money on the trade in the settle currency"
+                },
+                "interest": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Interest value"
+                },
+                "price": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Price"
+                },
+                "collateralPercentage": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Indicates haircut to be applied to collateral"
+                },
+                "cashPercentage": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Indicates haircut to be applied to loan amount"
+                },
+                "terminationDate": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "Termination date"
+                },
+                "effectiveTerminationDate": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "Effective termination date"
+                }
+            }
+        },
+        "v2TradeComment": {
+            "type": "object",
+            "title": "Trade Comment\n(-- api-linter: aladdin::0901::prefix-required-field=disabled\n aip.dev/not-precedent: We need to do this because prefix of all field would be trade_comment --)",
+            "properties": {
+                "comment": {
+                    "type": "string",
+                    "title": "Trade comment"
+                },
+                "commentType": {
+                    "description": "Comment type of trade comment. As decode limits the trade comments processed rather than adds them.",
+                    "$ref": "#/definitions/TradeCommentCommentType"
+                }
+            }
+        },
+        "v2TradeCriterion": {
+            "description": "It represents trade-specific criteria.",
+            "type": "object",
+            "properties": {
+                "transactionTypes": {
+                    "description": "A list of transaction types of trade.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "v2TradeFXLegs": {
+            "type": "object",
+            "title": "Trade FX legs",
+            "properties": {
+                "firstLeg": {
+                    "description": "First leg.",
+                    "$ref": "#/definitions/TradeFXLegsFXLeg"
+                },
+                "secondLeg": {
+                    "description": "Second leg.",
+                    "$ref": "#/definitions/TradeFXLegsFXLeg"
+                }
+            }
+        },
+        "v2TradeFlags": {
+            "description": "Trade flag.",
+            "type": "object",
+            "properties": {
+                "cashHaircut": {
+                    "type": "boolean",
+                    "title": "Cash haircut. (Output only field)",
+                    "readOnly": true
+                },
+                "deliveryFreePayment": {
+                    "type": "boolean",
+                    "title": "This trade settles free of payment; i.e., it does not settle DVP"
+                },
+                "electronicPoolNotificationEligible": {
+                    "type": "boolean",
+                    "title": "EPN (Electronic Pool Notification) eligible. (Output only field)",
+                    "readOnly": true
+                },
+                "fullyAllocated": {
+                    "type": "boolean",
+                    "title": "Fully allocated. (Output only field)",
+                    "readOnly": true
+                },
+                "netted": {
+                    "type": "boolean",
+                    "title": "Netted. (Output only field)",
+                    "readOnly": true
+                },
+                "allowDirtyPrice": {
+                    "type": "boolean",
+                    "title": "Allow dirty price. (Output only field)",
+                    "readOnly": true
+                },
+                "compliancePending": {
+                    "type": "boolean",
+                    "title": "Compliance pending. (Output only field)",
+                    "readOnly": true
+                },
+                "beneficialOwnershipChange": {
+                    "type": "boolean",
+                    "title": "Change of beneficial ownership"
+                },
+                "outsideCommitment": {
+                    "type": "boolean",
+                    "title": "Out-side commitment"
+                },
+                "suppressContract": {
+                    "type": "boolean",
+                    "title": "Suppress Contract"
+                }
+            }
+        },
+        "v2TradeKey": {
+            "description": "TradeKey represents the uniquely identified keys of trade.",
+            "type": "object",
+            "required": [
+                "invnum"
+            ],
+            "properties": {
+                "portfolioReference": {
+                    "description": "Portfolio reference.",
+                    "$ref": "#/definitions/portfolioPortfolioReference"
+                },
+                "invnum": {
+                    "description": "Invnum of the trade.",
+                    "type": "integer",
+                    "format": "int32",
+                    "required": [
+                        "invnum"
+                    ]
+                }
+            }
+        },
+        "v2TradeKeyCriterion": {
+            "description": "It represents trade key criterion.",
+            "type": "object",
+            "required": [
+                "invnum"
+            ],
+            "properties": {
+                "portfolioReference": {
+                    "description": "Portfolio reference to retrieve the trades. Preference is given to portfolio id.",
+                    "$ref": "#/definitions/portfolioPortfolioReference"
+                },
+                "invnum": {
+                    "description": "Invnum of the trade.",
+                    "type": "integer",
+                    "format": "int32",
+                    "required": [
+                        "invnum"
+                    ]
+                },
+                "touchCount": {
+                    "description": "Touch count of the trade - if version and touch count are absent, we fetch the latest trade.",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "version": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Version of the trade - if version and touch count are absent, we fetch the latest trade.\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n    aip.dev/not-precedent: We need to do this because version in trade proto is of type int32 everywhere. --)"
+                }
+            }
+        },
+        "v2TradeQuote": {
+            "type": "object",
+            "title": "Trade Quote",
+            "properties": {
+                "bidRate": {
+                    "description": "The bid in yield form. It can be calculated based on the bid and security details.",
+                    "type": "number",
+                    "format": "double"
+                },
+                "bidSpread": {
+                    "description": "The bid as a spread. It can be calculated based on the bid and other trade details like pricing index, pricing spread, and settle date.",
+                    "type": "number",
+                    "format": "double"
+                },
+                "offerPrice": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "The offer price associated with the quote"
+                },
+                "offerRate": {
+                    "description": "The offer in yield form. It can be calculated based on the offer and security details.",
+                    "type": "number",
+                    "format": "double"
+                },
+                "offerSpread": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "The offer as a spread. It can be calculated based on the offer and other trade details like pricing index, pricing spread, and settle date"
+                },
+                "bidPrice": {
+                    "description": "The bid price associated with the quote.",
+                    "type": "number",
+                    "format": "double"
+                },
+                "brokerId": {
+                    "type": "string",
+                    "title": "Broker Id - The unique ID of the broker who provided this quote"
+                },
+                "quantity": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Quote quantity. (Output only field)\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n aip.dev/not-precedent: We need to do this because this quantity is specific to trade quote --)",
+                    "readOnly": true
+                },
+                "status": {
+                    "title": "Quote status. (Output only field)\n(-- api-linter: aladdin::9027::dictionary-conflicting-types-existing=disabled\n aip.dev/not-precedent: We need to do this because the status field is specific to Trade Quote Status. --)",
+                    "$ref": "#/definitions/TradeQuoteQuoteStatus"
+                },
+                "brokerQuoteId": {
+                    "type": "string",
+                    "title": "Broker quote id. (Output only field)\n(-- api-linter: core::0124::required-reference=disabled\n aip.dev/not-precedent: We need to do this because this field has no reference --)",
+                    "readOnly": true
+                }
+            }
+        },
+        "v2TradeRelationship": {
+            "type": "object",
+            "title": "Relationship between trades",
+            "properties": {
+                "portfolioReference1": {
+                    "title": "Portfolio reference of first trade. (Output only field)",
+                    "$ref": "#/definitions/portfolioPortfolioReference"
+                },
+                "portfolioReference2": {
+                    "title": "Portfolio reference of second trade",
+                    "$ref": "#/definitions/portfolioPortfolioReference"
+                },
+                "invnum1": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Invnum of first trade. (Output only field)",
+                    "readOnly": true
+                },
+                "invnum2": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Invnum of second trade"
+                },
+                "amount": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Amount\n(-- api-linter: aladdin::0901::dictionary-message-field=disabled\n    aip.dev/not-precedent: Type is specific to trade amount. --)"
+                },
+                "tradeRelationshipType": {
+                    "type": "string",
+                    "title": "Trade relationship type"
+                },
+                "applyTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "title": "Apply time. (Output only field)",
+                    "readOnly": true
+                },
+                "version1": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Version of first trade. (Output only field)",
+                    "readOnly": true
+                },
+                "version2": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Version of second trade. (Output only field)",
+                    "readOnly": true
+                }
+            }
+        },
+        "v2TradeResult": {
+            "type": "object",
+            "title": "TradeResult represents the result of a trade posting, updating or cancelling.\n(-- api-linter: aladdin::9050::result-message-fields=disabled\n aip.dev/not-precedent: We need to do this because api result contains only trade summary not the complete trade --)",
+            "properties": {
+                "error": {
+                    "description": "The error result of the operation in case of failure or cancellation.",
+                    "$ref": "#/definitions/rpcStatus"
+                },
+                "output": {
+                    "description": "The normal response of the operation in case of success.",
+                    "$ref": "#/definitions/v2BlockTradeSnippet"
+                }
+            }
+        },
+        "v2TradeSnippet": {
+            "description": "TradeSnippet represents a summary of a Trade.",
+            "type": "object",
+            "properties": {
+                "portfolioReference": {
+                    "title": "Portfolio reference - cannot be null",
+                    "$ref": "#/definitions/portfolioPortfolioReference"
+                },
+                "invnum": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Invnum"
+                },
+                "tradeNumber": {
+                    "type": "integer",
+                    "format": "int32",
+                    "title": "Trade number"
+                },
+                "quantity": {
+                    "type": "number",
+                    "format": "double",
+                    "title": "Unsigned quantity also known as orig_face"
+                },
+                "tradeRelationships": {
+                    "type": "array",
+                    "title": "List of trade relationships",
+                    "items": {
+                        "$ref": "#/definitions/v2TradeRelationship"
+                    }
+                },
+                "orderId": {
+                    "type": "string",
+                    "title": "Order id"
+                }
+            }
+        },
+        "v2UserDefinedField": {
+            "type": "object",
+            "title": "User Defined Trade Field",
+            "properties": {
+                "fieldLabel": {
+                    "description": "Label value for User Defined Field. Please refer to Aladdin decode 'TE_CUSTOM' to get the list of valid values.",
+                    "type": "string"
+                },
+                "fieldValue": {
+                    "description": "Value of User Defined Field. Please refer to Aladdin decode 'TE_CUSTOM' to get the list of valid values.",
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "APIKeyHeader": {
+            "type": "apiKey",
+            "name": "VND.com.blackrock.API-Key",
+            "in": "header"
+        },
+        "ClientKeyHeader": {
+            "type": "apiKey",
+            "name": "X-API-Key",
+            "in": "header"
+        },
+        "OAuth2AccessCode": {
+            "description": "This API uses OAuth 2.0 with the access code flow.",
+            "type": "oauth2",
+            "flow": "accessCode",
+            "authorizationUrl": "https://client.blackrock.com/api/oauth2/default/v1/authorize",
+            "tokenUrl": "https://client.blackrock.com/api/oauth2/default/v1/token",
+            "scopes": {
+                "offline_access": "This keeps you signed in to the app, even when you are not using it.",
+                "trading.trade_processing.trade.v2.Trade:read": "non-sensitive read",
+                "trading.trade_processing.trade.v2.Trade:write": "non-sensitive write"
+            }
+        },
+        "OAuth2ClientCredentials": {
+            "description": "This API uses OAuth 2.0 with the client credentials flow.",
+            "type": "oauth2",
+            "flow": "application",
+            "tokenUrl": "https://client.blackrock.com/api/oauth2/default/v1/token",
+            "scopes": {
+                "offline_access": "This keeps you signed in to the app, even when you are not using it.",
+                "trading.trade_processing.trade.v2.Trade:read": "non-sensitive read",
+                "trading.trade_processing.trade.v2.Trade:write": "non-sensitive write"
+            }
+        },
+        "basicAuth": {
+            "type": "basic"
+        }
+    },
+    "security": [
+        {
+            "APIKeyHeader": [],
+            "OAuth2AccessCode": [
+                "offline_access",
+                "trading.trade_processing.trade.v2.Trade:read",
+                "trading.trade_processing.trade.v2.Trade:write"
+            ]
+        },
+        {
+            "APIKeyHeader": [],
+            "OAuth2ClientCredentials": [
+                "offline_access",
+                "trading.trade_processing.trade.v2.Trade:read",
+                "trading.trade_processing.trade.v2.Trade:write"
+            ]
+        },
+        {
+            "APIKeyHeader": [],
+            "ClientKeyHeader": []
+        },
+        {
+            "APIKeyHeader": [],
+            "basicAuth": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "Access.Internal"
+        }
+    ],
+    "x-access-level": "Public"
+}
