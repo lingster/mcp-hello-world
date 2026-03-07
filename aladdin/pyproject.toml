@@ -17,21 +17,22 @@ adc = [
 storage = [
     "boto3>=1.35.0",
 ]
-plugins = [
-    "asdk_plugin_accounting",
-    "asdk_plugin_analytics",
-    "asdk_plugin_clients",
-    "asdk_plugin_compliance",
-    "asdk_plugin_data",
-    "asdk_plugin_investment_operations",
-    "asdk_plugin_investment_research",
-    "asdk_plugin_platform",
-    "asdk_plugin_portfolio",
-    "asdk_plugin_portfolio_management",
-    "asdk_plugin_trading",
-]
+# plugins extra disabled until asdk plugins support pydantic v2
+# plugins = [
+#     "asdk_plugin_accounting",
+#     "asdk_plugin_analytics",
+#     "asdk_plugin_clients",
+#     "asdk_plugin_compliance",
+#     "asdk_plugin_data",
+#     "asdk_plugin_investment_operations",
+#     "asdk_plugin_investment_research",
+#     "asdk_plugin_platform",
+#     "asdk_plugin_portfolio",
+#     "asdk_plugin_portfolio_management",
+#     "asdk_plugin_trading",
+# ]
 all = [
-    "aladdin-mcp-server[adc,storage,plugins]",
+    "aladdin-mcp-server[adc,storage]",
 ]
 
 [project.scripts]
