@@ -15,6 +15,8 @@ def _get_client() -> AladdinRestClient:
         _client = AladdinRestClient(
             default_web_server=server_config.default_web_server,
             oauth_config=server_config.oauth,
+            lro_config=server_config.lro,
+            pagination_config=server_config.pagination,
         )
     return _client
 
@@ -102,4 +104,123 @@ def register_api_tools(mcp: FastMCP) -> None:
             return json.dumps(result, indent=2, default=str)
         except Exception as e:
             logger.error(f"API call failed for {http_method.upper()} {base_path}{endpoint_path}: {e}")
+            return json.dumps({"error": str(e)})
+
+    @mcp.tool()
+    def call_aladdin_api_with_pagination(
+        base_path: str,
+        endpoint_path: str,
+        http_method: str = "get",
+        request_body: dict | None = None,
+        params: dict | None = None,
+        page_size: int | None = None,
+        max_pages: int | None = None,
+    ) -> str:
+        """Call an Aladdin Graph API with automatic pagination.
+
+        Automatically follows nextPageToken across multiple pages and returns
+        all pages collected. Use this instead of call_aladdin_api when you expect
+        large result sets.
+
+        Args:
+            base_path: API base path (e.g. '/api/reference-architecture/demo/train-journey/v1/')
+            endpoint_path: Swagger endpoint path (e.g. '/trainJourneys:filter')
+            http_method: HTTP method - get, post, put, delete, patch
+            request_body: Request body dict for POST/PUT/PATCH calls
+            params: Query parameters dict
+            page_size: Number of results per page (default: 100)
+            max_pages: Maximum number of pages to fetch (default: 10)
+        """
+        try:
+            pages = _get_client().call_api_with_pagination(
+                base_path=base_path,
+                endpoint_path=endpoint_path,
+                http_method=http_method,
+                request_body=request_body,
+                params=params,
+                page_size=page_size,
+                max_pages=max_pages,
+            )
+            return json.dumps({
+                "total_pages": len(pages),
+                "pages": pages,
+            }, indent=2, default=str)
+        except Exception as e:
+            logger.error(f"Paginated API call failed: {e}")
+            return json.dumps({"error": str(e)})
+
+    @mcp.tool()
+    def poll_long_running_operation(
+        base_path: str,
+        lro_id: str,
+        status_endpoint: str = "/longRunningOperations/{id}",
+        check_interval: int | None = None,
+        timeout: int | None = None,
+    ) -> str:
+        """Poll a long-running operation (LRO) until it completes.
+
+        Some Aladdin APIs return long-running operations that must be polled
+        for completion. Use this tool to wait for an LRO to finish.
+
+        Args:
+            base_path: API base path (e.g. '/api/reference-architecture/demo/train-journey/v1/')
+            lro_id: The long-running operation ID returned by the initial API call
+            status_endpoint: Endpoint template for checking status (must contain {id})
+            check_interval: Seconds between status checks (default: 10)
+            timeout: Maximum seconds to wait before timing out (default: 300)
+        """
+        try:
+            result = _get_client().poll_lro(
+                base_path=base_path,
+                lro_id=lro_id,
+                status_endpoint=status_endpoint,
+                check_interval=check_interval,
+                timeout=timeout,
+            )
+            return json.dumps(result, indent=2, default=str)
+        except Exception as e:
+            logger.error(f"LRO polling failed for {lro_id}: {e}")
+            return json.dumps({"error": str(e)})
+
+    @mcp.tool()
+    def start_and_poll_long_running_operation(
+        base_path: str,
+        start_endpoint: str,
+        status_endpoint: str = "/longRunningOperations/{id}",
+        http_method: str = "post",
+        request_body: dict | None = None,
+        params: dict | None = None,
+        check_interval: int | None = None,
+        timeout: int | None = None,
+    ) -> str:
+        """Start a long-running operation and automatically poll until completion.
+
+        Combines starting an LRO and polling for its result in a single call.
+        The operation is started using the start_endpoint, then automatically
+        polled via the status_endpoint until done or timed out.
+
+        Args:
+            base_path: API base path (e.g. '/api/reference-architecture/demo/train-journey/v1/')
+            start_endpoint: Endpoint to start the LRO (e.g. '/trainJourneys:batchProcess')
+            status_endpoint: Endpoint template for checking status (must contain {id})
+            http_method: HTTP method for starting the LRO (usually post)
+            request_body: Request body for starting the LRO
+            params: Query parameters for starting the LRO
+            check_interval: Seconds between status checks (default: 10)
+            timeout: Maximum seconds to wait before timing out (default: 300)
+        """
+        try:
+            result = _get_client().start_and_poll_lro(
+                base_path=base_path,
+                start_endpoint=start_endpoint,
+                status_endpoint=status_endpoint,
+                http_method=http_method,
+                request_body=request_body,
+                params=params,
+                check_interval=check_interval,
+                timeout=timeout,
+            )
+            return json.dumps(result, indent=2, default=str)
+        except Exception as e:
+            logger.error(f"LRO start+poll failed: {e}")
             return json.dumps({"error": str(e)})

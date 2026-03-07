@@ -134,3 +134,65 @@ def register_adc_tools(mcp: FastMCP) -> None:
         except Exception as e:
             logger.error(f"Failed to describe table: {e}")
             return json.dumps({"error": str(e)})
+
+    @mcp.tool()
+    def write_adc(
+        data: list[dict],
+        table_name: str,
+        database: str | None = None,
+        schema: str | None = None,
+        overwrite: bool = False,
+        auto_create_table: bool = True,
+    ) -> str:
+        """Write data to an Aladdin Data Cloud (Snowflake) table.
+
+        Writes a list of row dicts to Snowflake using pandas write_pandas.
+
+        Args:
+            data: List of row dicts to write (e.g. [{"col1": "val1", "col2": 2}, ...])
+            table_name: Target table name
+            database: Snowflake database (uses default if not provided)
+            schema: Snowflake schema (uses default if not provided)
+            overwrite: If true, overwrite existing data in the table
+            auto_create_table: If true, auto-create the table if it doesn't exist
+
+        Returns:
+            JSON with write status and row count.
+        """
+        import pandas as pd
+        from snowflake.connector.pandas_tools import write_pandas
+
+        try:
+            tbl = validate_sql_identifier(table_name, "table_name")
+            if database:
+                validate_sql_identifier(database, "database")
+            if schema:
+                validate_sql_identifier(schema, "schema")
+
+            df = pd.DataFrame(data)
+            if df.empty:
+                return json.dumps({"error": "No data provided"})
+
+            conn = _get_snowflake_connection()
+            try:
+                success, num_chunks, num_rows, _ = write_pandas(
+                    conn=conn,
+                    df=df,
+                    table_name=tbl,
+                    database=database,
+                    schema=schema,
+                    overwrite=overwrite,
+                    auto_create_table=auto_create_table,
+                    quote_identifiers=False,
+                )
+                return json.dumps({
+                    "status": "success" if success else "failed",
+                    "table_name": table_name,
+                    "rows_written": num_rows,
+                    "chunks": num_chunks,
+                }, indent=2)
+            finally:
+                conn.close()
+        except Exception as e:
+            logger.error(f"Failed to write to ADC table {table_name}: {e}")
+            return json.dumps({"error": str(e)})
