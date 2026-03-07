@@ -1,6 +1,5 @@
 import json
 
-import snowflake.connector
 from loguru import logger
 from mcp.server.fastmcp import FastMCP
 
