@@ -25,16 +25,26 @@ adc = [
     { name = "pandas" },
     { name = "snowflake-connector-python" },
 ]
+all = [
+    { name = "boto3" },
+    { name = "pandas" },
+    { name = "snowflake-connector-python" },
+]
+storage = [
+    { name = "boto3" },
+]
 
 [package.metadata]
 requires-dist = [
+    { name = "aladdin-mcp-server", extras = ["adc", "storage"], marker = "extra == 'all'" },
+    { name = "boto3", marker = "extra == 'storage'", specifier = ">=1.35.0" },
     { name = "httpx", specifier = ">=0.27.0" },
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.26.0" },
     { name = "pandas", marker = "extra == 'adc'", specifier = ">=2.0.0" },
     { name = "snowflake-connector-python", marker = "extra == 'adc'", specifier = ">=3.6.0" },
 ]
-provides-extras = ["adc"]
+provides-extras = ["adc", "storage", "all"]
 
 [[package]]
 name = "annotated-doc"
