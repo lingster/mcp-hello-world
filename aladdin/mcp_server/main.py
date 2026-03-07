@@ -1,10 +1,12 @@
+import os
 import sys
+from pathlib import Path
 
-import uvicorn
 from loguru import logger
 from mcp.server.fastmcp import FastMCP
 
 from mcp_server.config import server_config
+from mcp_server.rest_client import set_swagger_dir
 from mcp_server.tools.adc_tools import register_adc_tools
 from mcp_server.tools.api_tools import register_api_tools
 
@@ -14,10 +16,15 @@ logger.add(sys.stderr, level="DEBUG" if server_config.debug else "INFO")
 
 def create_mcp_server() -> FastMCP:
     """Create and configure the Aladdin MCP server."""
+    swagger_dir = os.getenv("ALADDIN_SWAGGER_DIR")
+    if swagger_dir:
+        set_swagger_dir(Path(swagger_dir))
+        logger.info(f"Swagger directory configured: {swagger_dir}")
+
     mcp = FastMCP(
         name="aladdin-mcp",
         instructions=(
-            "Aladdin MCP Server provides access to BlackRock's Aladdin SDK. "
+            "Aladdin MCP Server provides access to BlackRock's Aladdin platform via direct REST APIs. "
             "Use the API tools to call Aladdin Graph APIs, and the ADC tools "
             "to query Aladdin Data Cloud (Snowflake). "
             "Start by listing available APIs with list_available_apis()."

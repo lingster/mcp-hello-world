@@ -3,16 +3,16 @@ from pydantic import BaseModel, Field
 
 class ApiCallRequest(BaseModel):
     api_name: str = Field(description="Name of the Aladdin API (e.g. 'TrainJourneyAPI')")
-    endpoint: str = Field(description="API endpoint method name or swagger path")
+    endpoint: str = Field(description="API endpoint swagger path (e.g. '/trainJourneys:filter')")
     http_method: str = Field(
-        default="get",
-        description="HTTP method: get, post, put, delete, patch",
+        default="GET",
+        description="HTTP method: GET, POST, PUT, DELETE, PATCH",
     )
     request_body: dict | None = Field(
         default=None,
         description="Request body for POST/PUT/PATCH calls",
     )
-    params: dict = Field(
+    query_params: dict = Field(
         default_factory=dict,
         description="Query parameters for the API call",
     )
@@ -28,10 +28,12 @@ class ApiListResponse(BaseModel):
 
 class ApiEndpointsResponse(BaseModel):
     api_name: str
-    endpoints: list[str] = Field(description="List of endpoint method names")
+    base_url: str
+    endpoints: list[dict[str, str]] = Field(description="List of endpoint details")
 
 
-class ApiEndpointSignatureResponse(BaseModel):
+class ApiEndpointSchemaResponse(BaseModel):
     api_name: str
     endpoint: str
-    signature: str = Field(description="Method signature of the endpoint")
+    method: str
+    schema: dict | None = Field(description="Endpoint schema from swagger")
